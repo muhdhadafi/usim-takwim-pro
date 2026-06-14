@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#006b3f" />
+    <meta name="description" content="Takwim Akademik Pusat Tamhidi USIM Sesi Akademik 2026/2027" />
+    <title>Takwim Akademik USIM 2026/2027</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <img class="brand-logo" src="icons/usim-logo-official.png" alt="Logo rasmi USIM" />
+        <div>
+          <p class="eyebrow">Pusat Tamhidi</p>
+          <h1>Takwim Akademik 2026/2027</h1>
+          <p class="subtitle">Universiti Sains Islam Malaysia</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-button" id="installBtn" type="button" title="Pasang aplikasi" aria-label="Pasang aplikasi">
+          <span>⬇</span>
+        </button>
+        <button class="icon-button" id="printBtn" type="button" title="Cetak A4" aria-label="Cetak A4">
+          <span>⎙</span>
+        </button>
+        <button class="icon-button" id="exportBtn" type="button" title="Export Google Calendar ICS" aria-label="Export Google Calendar ICS">
+          <span>↗</span>
+        </button>
+        <button class="icon-button" id="themeBtn" type="button" title="Tukar tema" aria-label="Tukar tema">
+          <span id="themeIcon">◐</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Penapis takwim">
+        <section class="panel compact-panel">
+          <div class="panel-title">
+            <h2>Penapis</h2>
+            <button class="text-button" id="resetFilters" type="button">Reset</button>
+          </div>
+          <label class="field">
+            <span>Semester</span>
+            <select id="semesterFilter">
+              <option value="all">Semua semester</option>
+              <option value="1">Semester I</option>
+              <option value="2">Semester II</option>
+            </select>
+          </label>
+          <div class="check-list" id="typeFilters"></div>
+        </section>
+
+        <section class="panel stats-panel">
+          <div class="panel-title">
+            <h2>Statistik</h2>
+            <span class="live-dot" aria-hidden="true"></span>
+          </div>
+          <div class="stats-grid" id="statsGrid"></div>
+        </section>
+
+        <section class="panel next-panel">
+          <div class="panel-title">
+            <h2>Aktiviti Terdekat</h2>
+          </div>
+          <div class="next-list" id="nextList"></div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <nav class="tabs" aria-label="Paparan">
+          <button class="tab active" data-view="calendar" type="button">Kalendar</button>
+          <button class="tab" data-view="timeline" type="button">Timeline</button>
+          <button class="tab" data-view="table" type="button">Jadual</button>
+        </nav>
+
+        <section class="view active" id="calendarView" aria-label="Paparan kalendar bulanan">
+          <div class="calendar-toolbar">
+            <div class="month-control">
+              <button class="icon-button small" id="prevMonth" type="button" aria-label="Bulan sebelumnya">‹</button>
+              <div>
+                <p class="eyebrow">Grid bulanan</p>
+                <h2 id="monthLabel"></h2>
+              </div>
+              <button class="icon-button small" id="nextMonth" type="button" aria-label="Bulan seterusnya">›</button>
+            </div>
+            <button class="text-button" id="todayBtn" type="button">Hari ini</button>
+          </div>
+          <div class="weekday-row" aria-hidden="true">
+            <span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span><span>Aha</span>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <section class="view" id="timelineView" aria-label="Timeline akademik">
+          <div class="panel timeline-panel">
+            <div class="panel-title">
+              <h2>Timeline / Gantt Interaktif</h2>
+              <span id="timelineRange"></span>
+            </div>
+            <div class="timeline-scale" id="timelineScale"></div>
+            <div class="timeline-list" id="timelineList"></div>
+          </div>
+        </section>
+
+        <section class="view" id="tableView" aria-label="Jadual aktiviti akademik">
+          <div class="panel table-panel">
+            <div class="panel-title">
+              <h2>Jadual Takwim</h2>
+              <span id="tableCount"></span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Aktiviti</th>
+                    <th>Kategori</th>
+                    <th>Semester</th>
+                    <th>Tarikh</th>
+                    <th>Tempoh</th>
+                  </tr>
+                </thead>
+                <tbody id="eventTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="eventDialog">
+      <button class="icon-button close" id="closeDialog" type="button" aria-label="Tutup">×</button>
+      <p class="eyebrow" id="dialogCategory"></p>
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogDate"></p>
+      <p id="dialogMeta"></p>
+    </dialog>
+
+    <template id="eventChipTemplate">
+      <button class="event-chip" type="button"></button>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
