@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#006b3f"/>
-  <circle cx="256" cy="256" r="172" fill="none" stroke="#c9a227" stroke-width="28"/>
-  <path d="M165 170h182v42H165zM165 235h182v42H165zM165 300h120v42H165z" fill="#fff"/>
-  <text x="256" y="420" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="800" fill="#c9a227">USIM</text>
+  <rect width="512" height="512" rx="96" fill="#006c45"/>
+  <circle cx="256" cy="230" r="150" fill="none" stroke="#c9a227" stroke-width="28"/>
+  <path d="M165 150h182v42H165zM165 215h182v42H165zM165 280h120v42H165z" fill="#fff"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="800" fill="#c9a227">USIM</text>
 </svg>

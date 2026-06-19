@@ -1,68 +1,105 @@
-const academicEvents = [
-  { id: "s1-reg-univ", title: "Pendaftaran Diri / Universiti Secara Dalam Talian", start: "2026-06-13", end: "2026-06-14", type: "semester", semester: "1" },
-  { id: "s1-reg-hostel", title: "Pendaftaran Kolej Kediaman", start: "2026-06-15", end: "2026-06-16", type: "semester", semester: "1" },
-  { id: "s1-orientation", title: "Minggu Taaruf", start: "2026-06-17", end: "2026-06-18", type: "semester", semester: "1" },
-  { id: "s1-lecture-a", title: "Perkuliahan", start: "2026-06-22", end: "2026-08-23", type: "kuliah", semester: "1" },
-  { id: "s1-mid-break", title: "Cuti Pertengahan Semester I", start: "2026-08-24", end: "2026-08-31", type: "cuti", semester: "1" },
-  { id: "s1-lecture-b", title: "Perkuliahan", start: "2026-09-01", end: "2026-10-31", type: "kuliah", semester: "1" },
-  { id: "s1-revision", title: "Minggu Ulang Kaji", start: "2026-11-01", end: "2026-11-09", type: "peperiksaan", semester: "1" },
-  { id: "s1-exam", title: "Peperiksaan Akhir Semester I", start: "2026-11-10", end: "2026-11-13", type: "peperiksaan", semester: "1" },
-  { id: "s1-break", title: "Cuti Semester I", start: "2026-11-14", end: "2026-12-13", type: "cuti", semester: "1" },
-  { id: "s2-course-reg", title: "Pendaftaran Kursus (Online)", start: "2026-12-14", end: "2026-12-14", type: "semester", semester: "2" },
-  { id: "s2-lecture-a", title: "Perkuliahan", start: "2026-12-14", end: "2027-02-14", type: "kuliah", semester: "2" },
-  { id: "s2-mid-break", title: "Cuti Pertengahan Semester II", start: "2027-02-15", end: "2027-02-21", type: "cuti", semester: "2" },
-  { id: "s2-lecture-b", title: "Perkuliahan", start: "2027-02-22", end: "2027-04-25", type: "kuliah", semester: "2" },
-  { id: "s2-revision", title: "Minggu Ulang Kaji", start: "2027-04-26", end: "2027-05-02", type: "peperiksaan", semester: "2" },
-  { id: "s2-exam", title: "Peperiksaan Akhir Semester II", start: "2027-05-03", end: "2027-05-07", type: "peperiksaan", semester: "2" },
-  { id: "s2-break", title: "Cuti Semester II", start: "2027-05-08", end: "2027-06-06", type: "cuti", semester: "2" },
-  { id: "h-awal-muharram", title: "Awal Muharram", start: "2026-06-17", end: "2026-06-17", type: "cuti-umum", semester: "1" },
-  { id: "h-maulidur", title: "Hari Keputeraan Nabi Muhammad S.A.W", start: "2026-08-25", end: "2026-08-25", type: "cuti-umum", semester: "1" },
-  { id: "h-merdeka", title: "Hari Merdeka", start: "2026-08-31", end: "2026-08-31", type: "cuti-umum", semester: "1" },
-  { id: "h-malaysia", title: "Hari Malaysia", start: "2026-09-16", end: "2026-09-16", type: "cuti-umum", semester: "1" },
-  { id: "h-deepavali", title: "Cuti Gantian Deepavali", start: "2026-11-09", end: "2026-11-09", type: "cuti-umum", semester: "1" },
-  { id: "h-christmas", title: "Hari Krismas", start: "2026-12-25", end: "2026-12-25", type: "cuti-umum", semester: "2" },
-  { id: "h-new-year", title: "Cuti Tahun Baru 2027", start: "2027-01-01", end: "2027-01-01", type: "cuti-umum", semester: "2" },
-  { id: "h-israk", title: "Cuti Israk dan Mikraj", start: "2027-01-06", end: "2027-01-06", type: "cuti-umum", semester: "2" },
-  { id: "h-ns-ruler", title: "Hari Keputeraan Yang di-Pertuan Besar Negeri Sembilan", start: "2027-01-14", end: "2027-01-14", type: "cuti-umum", semester: "2" },
-  { id: "h-thaipusam", title: "Cuti Thaipusam", start: "2027-01-22", end: "2027-01-22", type: "cuti-umum", semester: "2" },
-  { id: "h-cny-replacement", title: "Cuti Gantian Tahun Baru Cina", start: "2027-02-08", end: "2027-02-08", type: "cuti-umum", semester: "2" },
-  { id: "h-nuzul", title: "Hari Nuzul Al-Quran", start: "2027-02-24", end: "2027-02-24", type: "cuti-umum", semester: "2" },
-  { id: "h-aidilfitri", title: "Cuti Hari Raya Aidilfitri", start: "2027-03-10", end: "2027-03-11", type: "cuti-umum", semester: "2" },
-  { id: "h-aidiladha", title: "Cuti Hari Raya Aidiladha", start: "2027-05-17", end: "2027-05-17", type: "cuti-umum", semester: "2" }
-];
+const fallbackData = window.USIM_CALENDAR_DATA || null;
 
-const typeMeta = {
-  semester: { label: "Semester / Pendaftaran", color: "#2f6f90" },
-  kuliah: { label: "Kuliah", color: "#006b3f" },
-  peperiksaan: { label: "Peperiksaan", color: "#6b3fa0" },
-  cuti: { label: "Cuti Semester", color: "#a05a00" },
-  "cuti-umum": { label: "Cuti Umum", color: "#b42318" }
+const i18n = {
+  ms: {
+    centre: "Pusat Tamhidi",
+    appTitle: "Takwim Akademik USIM",
+    sessionText: "Sesi Akademik 2026/2027",
+    controls: "Kawalan",
+    reset: "Reset",
+    session: "Sesi Akademik",
+    semester: "Semester",
+    category: "Kategori",
+    nextEvent: "Acara Seterusnya",
+    daysRemaining: "hari lagi",
+    print: "Cetak",
+    printFull: "Tahun Penuh",
+    calendar: "Kalendar",
+    agenda: "Agenda",
+    timeline: "Timeline",
+    table: "Jadual",
+    official: "Rasmi",
+    monthView: "Paparan Bulanan",
+    today: "Hari ini",
+    timelineTitle: "Timeline / Gantt",
+    activity: "Aktiviti",
+    cat: "Kategori",
+    date: "Tarikh",
+    duration: "Tempoh",
+    remainingDays: "Baki hari sesi",
+    totalEvents: "Aktiviti aktif",
+    lectureDays: "Hari kuliah",
+    examDays: "Hari peperiksaan",
+    upcomingExam: "Peperiksaan terdekat",
+    noUpcoming: "Tiada acara akan datang"
+  },
+  en: {
+    centre: "Tamhidi Centre",
+    appTitle: "USIM Academic Calendar",
+    sessionText: "Academic Session 2026/2027",
+    controls: "Controls",
+    reset: "Reset",
+    session: "Academic Session",
+    semester: "Semester",
+    category: "Category",
+    nextEvent: "Next Event",
+    daysRemaining: "days remaining",
+    print: "Print",
+    printFull: "Full Year",
+    calendar: "Calendar",
+    agenda: "Agenda",
+    timeline: "Timeline",
+    table: "Table",
+    official: "Official",
+    monthView: "Month View",
+    today: "Today",
+    timelineTitle: "Timeline / Gantt",
+    activity: "Activity",
+    cat: "Category",
+    date: "Date",
+    duration: "Duration",
+    remainingDays: "Session days left",
+    totalEvents: "Active events",
+    lectureDays: "Lecture days",
+    examDays: "Exam days",
+    upcomingExam: "Upcoming exam",
+    noUpcoming: "No upcoming events"
+  }
+};
+
+const categories = {
+  registration: { ms: "Pendaftaran", en: "Registration", color: "#2f6f90" },
+  lecture: { ms: "Kuliah", en: "Lecture", color: "#006c45" },
+  revision: { ms: "Ulang Kaji", en: "Revision", color: "#7c4d00" },
+  exam: { ms: "Peperiksaan", en: "Exam", color: "#b42318" },
+  semesterBreak: { ms: "Cuti Semester", en: "Semester Break", color: "#6b3fa0" },
+  publicHoliday: { ms: "Cuti Umum", en: "Public Holiday", color: "#c2410c" }
 };
 
 const state = {
+  data: { sessions: [], events: [] },
+  lang: localStorage.getItem("lang") || "ms",
+  theme: localStorage.getItem("theme") || "light",
+  session: "2026-2027",
+  semesters: new Set(["1", "2"]),
+  categories: new Set(Object.keys(categories)),
   month: new Date(2026, 5, 1),
-  semester: "all",
-  types: new Set(Object.keys(typeMeta)),
-  view: "calendar"
+  printSemester: "all"
 };
 
-const els = {
-  semesterFilter: document.querySelector("#semesterFilter"),
-  typeFilters: document.querySelector("#typeFilters"),
-  statsGrid: document.querySelector("#statsGrid"),
-  nextList: document.querySelector("#nextList"),
-  monthLabel: document.querySelector("#monthLabel"),
-  calendarGrid: document.querySelector("#calendarGrid"),
-  eventTable: document.querySelector("#eventTable"),
-  tableCount: document.querySelector("#tableCount"),
-  timelineScale: document.querySelector("#timelineScale"),
-  timelineList: document.querySelector("#timelineList"),
-  timelineRange: document.querySelector("#timelineRange"),
-  dialog: document.querySelector("#eventDialog")
-};
+const $ = (selector) => document.querySelector(selector);
 
-const fmtMonth = new Intl.DateTimeFormat("ms-MY", { month: "long", year: "numeric" });
-const fmtDate = new Intl.DateTimeFormat("ms-MY", { day: "numeric", month: "short", year: "numeric" });
+function locale() {
+  return state.lang === "ms" ? "ms-MY" : "en-GB";
+}
+
+function fmtDate() {
+  return new Intl.DateTimeFormat(locale(), { day: "numeric", month: "short", year: "numeric" });
+}
+
+function fmtMonth() {
+  return new Intl.DateTimeFormat(locale(), { month: "long", year: "numeric" });
+}
 
 function parseDate(value) {
   const [year, month, day] = value.split("-").map(Number);
@@ -79,64 +116,86 @@ function sameDay(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
-function daysInclusive(start, end) {
-  return Math.round((parseDate(end) - parseDate(start)) / 86400000) + 1;
+function daysInclusive(event) {
+  return Math.round((parseDate(event.end) - parseDate(event.start)) / 86400000) + 1;
 }
 
-function eventRangeText(event) {
+function title(event) {
+  return event.title[state.lang] || event.title.ms;
+}
+
+function categoryLabel(category) {
+  return categories[category][state.lang] || categories[category].ms;
+}
+
+function dateRange(event) {
   const start = parseDate(event.start);
   const end = parseDate(event.end);
-  return sameDay(start, end) ? fmtDate.format(start) : `${fmtDate.format(start)} - ${fmtDate.format(end)}`;
+  return sameDay(start, end) ? fmtDate().format(start) : `${fmtDate().format(start)} - ${fmtDate().format(end)}`;
 }
 
-function filteredEvents() {
-  return academicEvents
-    .filter((event) => state.semester === "all" || event.semester === state.semester)
-    .filter((event) => state.types.has(event.type))
+function activeEvents() {
+  return state.data.events
+    .filter((event) => event.session === state.session)
+    .filter((event) => state.semesters.has(String(event.semester)))
+    .filter((event) => state.categories.has(event.category))
+    .filter((event) => state.printSemester === "all" || String(event.semester) === state.printSemester)
     .sort((a, b) => parseDate(a.start) - parseDate(b.start));
 }
 
-function renderFilters() {
-  els.typeFilters.innerHTML = Object.entries(typeMeta).map(([type, meta]) => `
-    <label class="check-item">
-      <input type="checkbox" value="${type}" checked />
-      <span class="type-dot" style="background:${meta.color}"></span>
-      <span>${meta.label}</span>
+async function loadData() {
+  if (fallbackData) {
+    state.data = fallbackData;
+  } else {
+    const response = await fetch("events.json", { cache: "no-store" });
+    state.data = await response.json();
+  }
+  state.session = state.data.sessions[0]?.id || "2026-2027";
+}
+
+function renderI18n() {
+  document.documentElement.lang = state.lang;
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = i18n[state.lang][el.dataset.i18n] || el.textContent;
+  });
+  $("#langBtn").textContent = state.lang === "ms" ? "EN" : "BM";
+}
+
+function renderControls() {
+  $("#sessionSelect").innerHTML = state.data.sessions.map((session) => `<option value="${session.id}">${session.label}</option>`).join("");
+  $("#sessionSelect").value = state.session;
+  $("#categoryFilters").innerHTML = Object.entries(categories).map(([key, meta]) => `
+    <label>
+      <input type="checkbox" class="category-filter" value="${key}" ${state.categories.has(key) ? "checked" : ""} />
+      <span class="swatch" style="background:${meta.color}"></span>
+      ${meta[state.lang]}
     </label>
   `).join("");
 }
 
-function renderStats(events) {
-  const kuliahDays = events.filter((event) => event.type === "kuliah").reduce((sum, event) => sum + daysInclusive(event.start, event.end), 0);
-  const examDays = events.filter((event) => event.type === "peperiksaan").reduce((sum, event) => sum + daysInclusive(event.start, event.end), 0);
-  const holidayDays = events.filter((event) => event.type === "cuti" || event.type === "cuti-umum").reduce((sum, event) => sum + daysInclusive(event.start, event.end), 0);
-  const semesterCount = new Set(events.map((event) => event.semester)).size;
-  const stats = [
-    [events.length, "Aktiviti aktif"],
-    [kuliahDays, "Hari kuliah"],
-    [examDays, "Hari ulang kaji / peperiksaan"],
-    [holidayDays, "Hari cuti"],
-    [semesterCount, "Semester dipapar"],
-    [academicEvents.length, "Jumlah rekod"]
+function renderDashboard(events) {
+  const session = state.data.sessions.find((item) => item.id === state.session);
+  const now = new Date();
+  const remaining = session ? Math.max(0, Math.ceil((parseDate(session.end) - now) / 86400000)) : 0;
+  const lectureDays = events.filter((event) => event.category === "lecture").reduce((sum, event) => sum + daysInclusive(event), 0);
+  const examDays = events.filter((event) => event.category === "exam").reduce((sum, event) => sum + daysInclusive(event), 0);
+  const nextExam = events.find((event) => event.category === "exam" && parseDate(event.end) >= now);
+  const cards = [
+    [remaining, i18n[state.lang].remainingDays],
+    [events.length, i18n[state.lang].totalEvents],
+    [lectureDays, i18n[state.lang].lectureDays],
+    [examDays, i18n[state.lang].examDays],
+    [nextExam ? fmtDate().format(parseDate(nextExam.start)) : "-", i18n[state.lang].upcomingExam]
   ];
-  els.statsGrid.innerHTML = stats.map(([value, label]) => `
-    <div class="stat-card">
-      <p class="stat-value">${value}</p>
-      <p class="stat-label">${label}</p>
-    </div>
-  `).join("");
+  $("#dashboard").innerHTML = cards.map(([value, label]) => `<article class="metric"><strong>${value}</strong><span>${label}</span></article>`).join("");
 }
 
-function renderNext(events) {
-  const today = new Date();
-  const upcoming = events.filter((event) => parseDate(event.end) >= today).slice(0, 5);
-  const fallback = events.slice(0, 5);
-  els.nextList.innerHTML = (upcoming.length ? upcoming : fallback).map((event) => `
-    <div class="next-item" style="border-left-color:${typeMeta[event.type].color}">
-      <strong>${event.title}</strong>
-      <span>${eventRangeText(event)} · ${typeMeta[event.type].label}</span>
-    </div>
-  `).join("");
+function renderCountdown(events) {
+  const now = new Date();
+  const next = events.find((event) => parseDate(event.end) >= now);
+  $("#nextTitle").textContent = next ? title(next) : i18n[state.lang].noUpcoming;
+  $("#nextDate").textContent = next ? dateRange(next) : "-";
+  $("#countdownDays").textContent = next ? Math.max(0, Math.ceil((parseDate(next.start) - now) / 86400000)) : 0;
 }
 
 function eventsForDay(events, day) {
@@ -144,223 +203,246 @@ function eventsForDay(events, day) {
 }
 
 function renderCalendar(events) {
-  els.monthLabel.textContent = fmtMonth.format(state.month);
-  els.calendarGrid.innerHTML = "";
-  const monthStart = new Date(state.month.getFullYear(), state.month.getMonth(), 1);
-  const monthEnd = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 0);
-  const mondayIndex = (monthStart.getDay() + 6) % 7;
-  const gridStart = addDays(monthStart, -mondayIndex);
-  const totalCells = Math.ceil((mondayIndex + monthEnd.getDate()) / 7) * 7;
+  $("#monthLabel").textContent = fmtMonth().format(state.month);
+  const start = new Date(state.month.getFullYear(), state.month.getMonth(), 1);
+  const end = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 0);
+  const offset = (start.getDay() + 6) % 7;
+  const gridStart = addDays(start, -offset);
+  const cells = Math.ceil((offset + end.getDate()) / 7) * 7;
   const today = new Date();
+  const html = [];
 
-  for (let index = 0; index < totalCells; index += 1) {
+  for (let index = 0; index < cells; index += 1) {
     const day = addDays(gridStart, index);
-    const cell = document.createElement("article");
-    cell.className = "day-cell";
-    if (day.getMonth() !== state.month.getMonth()) cell.classList.add("is-muted");
-    if (sameDay(day, today)) cell.classList.add("is-today");
-
-    const dayEvents = eventsForDay(events, day);
-    const visible = dayEvents.slice(0, 3);
-    cell.innerHTML = `
+    const matches = eventsForDay(events, day);
+    html.push(`<article class="day-cell ${day.getMonth() !== state.month.getMonth() ? "muted" : ""} ${sameDay(day, today) ? "today" : ""}">
       <div class="day-number">${day.getDate()}</div>
-      <div class="cell-events"></div>
-    `;
-    const holder = cell.querySelector(".cell-events");
-    visible.forEach((event) => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "event-chip";
-      chip.dataset.type = event.type;
-      chip.textContent = event.title;
-      chip.addEventListener("click", () => openEvent(event));
-      holder.appendChild(chip);
-    });
-    if (dayEvents.length > 3) {
-      const more = document.createElement("span");
-      more.className = "more-chip";
-      more.textContent = `+${dayEvents.length - 3} lagi`;
-      holder.appendChild(more);
-    }
-    els.calendarGrid.appendChild(cell);
+      <div class="chips">
+        ${matches.slice(0, 3).map((event) => `<button class="chip ${event.category}" data-id="${event.id}" type="button">${title(event)}</button>`).join("")}
+        ${matches.length > 3 ? `<span class="more">+${matches.length - 3}</span>` : ""}
+      </div>
+    </article>`);
   }
+
+  $("#calendarGrid").innerHTML = html.join("");
+  document.querySelectorAll(".chip").forEach((chip) => chip.addEventListener("click", () => openEvent(chip.dataset.id)));
+}
+
+function renderAgenda(events) {
+  $("#agendaList").innerHTML = events.map((event) => `<article class="agenda-item" style="border-left-color:${categories[event.category].color}">
+    <div><strong>${dateRange(event)}</strong><span>Semester ${event.semester}</span></div>
+    <div><strong>${title(event)}</strong><span>${categoryLabel(event.category)} - ${daysInclusive(event)} ${state.lang === "ms" ? "hari" : "days"}</span></div>
+  </article>`).join("");
 }
 
 function renderTimeline(events) {
   const start = parseDate("2026-06-01");
   const end = parseDate("2027-06-30");
   const total = end - start;
-  els.timelineRange.textContent = "Jun 2026 - Jun 2027";
-  els.timelineScale.innerHTML = ["Jun", "Jul", "Ogos", "Sep", "Okt", "Nov", "Dis", "Jan", "Feb", "Mac", "Apr", "Mei"].map((month) => `<span>${month}</span>`).join("");
-  els.timelineList.innerHTML = events.map((event) => {
-    const eventStart = parseDate(event.start);
-    const eventEnd = parseDate(event.end);
-    const left = Math.max(0, ((eventStart - start) / total) * 100);
-    const width = Math.max(0.7, ((eventEnd - eventStart + 86400000) / total) * 100);
-    return `
-      <div class="timeline-row">
-        <div class="timeline-label">
-          <strong>${event.title}</strong>
-          <span>${eventRangeText(event)} · Sem ${event.semester}</span>
-        </div>
-        <div class="timeline-track">
-          <button class="timeline-bar" data-id="${event.id}" data-type="${event.type}" style="left:${left}%;width:${width}%" title="${event.title}" aria-label="${event.title}"></button>
-        </div>
-      </div>
-    `;
+  $("#timelineRange").textContent = "Jun 2026 - Jun 2027";
+  $("#timelineScale").innerHTML = ["Jun", "Jul", "Ogos", "Sep", "Okt", "Nov", "Dis", "Jan", "Feb", "Mac", "Apr", "Mei"].map((month) => `<span>${month}</span>`).join("");
+  $("#timelineList").innerHTML = events.map((event) => {
+    const left = Math.max(0, ((parseDate(event.start) - start) / total) * 100);
+    const width = Math.max(0.7, ((parseDate(event.end) - parseDate(event.start) + 86400000) / total) * 100);
+    return `<div class="timeline-row">
+      <div class="timeline-label"><strong>${title(event)}</strong><span>${dateRange(event)} - ${categoryLabel(event.category)}</span></div>
+      <div class="timeline-track"><button class="timeline-bar" data-id="${event.id}" style="left:${left}%;width:${width}%;background:${categories[event.category].color}" type="button"></button></div>
+    </div>`;
   }).join("");
-  els.timelineList.querySelectorAll(".timeline-bar").forEach((bar) => {
-    bar.addEventListener("click", () => openEvent(academicEvents.find((event) => event.id === bar.dataset.id)));
-  });
+  document.querySelectorAll(".timeline-bar").forEach((bar) => bar.addEventListener("click", () => openEvent(bar.dataset.id)));
 }
 
 function renderTable(events) {
-  els.tableCount.textContent = `${events.length} rekod`;
-  els.eventTable.innerHTML = events.map((event) => `
+  $("#eventTable").innerHTML = events.map((event) => `<tr>
+    <td><strong>${title(event)}</strong></td>
+    <td><span class="badge">${categoryLabel(event.category)}</span></td>
+    <td>${event.semester}</td>
+    <td>${dateRange(event)}</td>
+    <td>${daysInclusive(event)} ${state.lang === "ms" ? "hari" : "days"}</td>
+  </tr>`).join("");
+}
+
+function durationText(event) {
+  if (["s1-lecture-1", "s1-lecture-2", "s2-lecture-1", "s2-lecture-2"].includes(event.id)) return "9 minggu";
+  if (["s1-break", "s2-break"].includes(event.id)) return "4 minggu";
+  if (["s1-mid-break", "s2-mid-break", "s1-revision", "s2-revision", "s1-exam", "s2-exam"].includes(event.id)) return "1 minggu";
+  return `${daysInclusive(event)} hari`;
+}
+
+function renderOfficialDocument() {
+  const academic = state.data.events.filter((event) => event.session === state.session && event.category !== "publicHoliday");
+  const holidays = state.data.events.filter((event) => event.session === state.session && event.category === "publicHoliday");
+  const rows = (semester) => academic.filter((event) => event.semester === semester).map((event) => `
     <tr>
-      <td><strong>${event.title}</strong></td>
-      <td><span class="badge">${typeMeta[event.type].label}</span></td>
-      <td>Semester ${event.semester}</td>
-      <td>${eventRangeText(event)}</td>
-      <td>${daysInclusive(event.start, event.end)} hari</td>
+      <td>${event.title.ms}</td>
+      <td>${dateRange(event)}</td>
+      <td>${durationText(event)}</td>
     </tr>
   `).join("");
+
+  $("#officialDocument").innerHTML = `
+    <div class="official-title">
+      <h2>TAKWIM AKADEMIK<br />PUSAT TAMHIDI<br />UNIVERSITI SAINS ISLAM MALAYSIA<br />SESI AKADEMIK 2026/2027</h2>
+    </div>
+    <table class="official-table">
+      <thead>
+        <tr><th rowspan="2">AKTIVITI</th><th colspan="2">SEMESTER I</th></tr>
+        <tr><th>TARIKH</th><th>TEMPOH</th></tr>
+      </thead>
+      <tbody>${rows(1)}</tbody>
+    </table>
+    <table class="official-table">
+      <thead>
+        <tr><th rowspan="2">AKTIVITI</th><th colspan="2">SEMESTER II</th></tr>
+        <tr><th>TARIKH</th><th>TEMPOH</th></tr>
+      </thead>
+      <tbody>${rows(2)}</tbody>
+    </table>
+    <p class="official-note">* Tertakluk kepada pindaan</p>
+    <div class="holiday-list">
+      <strong>Hari Cuti / Kelepasan Am:</strong>
+      <ul>${holidays.map((event) => `<li>${event.title.ms}: ${dateRange(event)}</li>`).join("")}</ul>
+    </div>
+  `;
 }
 
 function renderAll() {
-  const events = filteredEvents();
-  renderStats(events);
-  renderNext(events);
+  renderI18n();
+  const events = activeEvents();
+  renderDashboard(events);
+  renderCountdown(events);
   renderCalendar(events);
+  renderAgenda(events);
   renderTimeline(events);
   renderTable(events);
+  renderOfficialDocument();
 }
 
-function openEvent(event) {
+function openEvent(id) {
+  const event = state.data.events.find((item) => item.id === id);
   if (!event) return;
-  document.querySelector("#dialogCategory").textContent = `${typeMeta[event.type].label} · Semester ${event.semester}`;
-  document.querySelector("#dialogTitle").textContent = event.title;
-  document.querySelector("#dialogDate").textContent = eventRangeText(event);
-  document.querySelector("#dialogMeta").textContent = `${daysInclusive(event.start, event.end)} hari · Sesi Akademik 2026/2027`;
-  els.dialog.showModal();
+  $("#dialogMeta").textContent = `${categoryLabel(event.category)} - Semester ${event.semester}`;
+  $("#dialogTitle").textContent = title(event);
+  $("#dialogDate").textContent = `${dateRange(event)} - ${daysInclusive(event)} ${state.lang === "ms" ? "hari" : "days"}`;
+  $("#eventDialog").showModal();
 }
 
-function toIcsDate(value, addEndDay = false) {
-  const date = addEndDay ? addDays(parseDate(value), 1) : parseDate(value);
+function icsDate(value, addEnd = false) {
+  const date = addEnd ? addDays(parseDate(value), 1) : parseDate(value);
   return `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, "0")}${String(date.getDate()).padStart(2, "0")}`;
 }
 
 function exportIcs() {
-  const lines = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//USIM Tamhidi//Takwim Akademik 2026-2027//MS",
-    "CALSCALE:GREGORIAN",
-    "METHOD:PUBLISH",
-    "X-WR-CALNAME:Takwim Akademik USIM 2026/2027"
-  ];
-  filteredEvents().forEach((event) => {
-    lines.push(
-      "BEGIN:VEVENT",
-      `UID:${event.id}@usim-takwim.local`,
-      `SUMMARY:${event.title.replaceAll(",", "\\,")}`,
-      `DTSTART;VALUE=DATE:${toIcsDate(event.start)}`,
-      `DTEND;VALUE=DATE:${toIcsDate(event.end, true)}`,
-      `CATEGORIES:${typeMeta[event.type].label}`,
-      `DESCRIPTION:Semester ${event.semester} - ${typeMeta[event.type].label}`,
-      "END:VEVENT"
-    );
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//USIM//Tamhidi Calendar//MS", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:USIM Tamhidi Calendar"];
+  activeEvents().forEach((event) => {
+    lines.push("BEGIN:VEVENT", `UID:${event.id}@usim-takwim-pro`, `SUMMARY:${title(event).replaceAll(",", "\\,")}`, `DTSTART;VALUE=DATE:${icsDate(event.start)}`, `DTEND;VALUE=DATE:${icsDate(event.end, true)}`, `CATEGORIES:${categoryLabel(event.category)}`, `DESCRIPTION:Semester ${event.semester} - ${categoryLabel(event.category)}`, "END:VEVENT");
   });
   lines.push("END:VCALENDAR");
   const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = url;
-  link.download = "takwim-akademik-usim-2026-2027.ics";
+  link.href = URL.createObjectURL(blob);
+  link.download = `usim-tamhidi-${state.session}.ics`;
   link.click();
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(link.href);
 }
 
-function wireEvents() {
-  els.semesterFilter.addEventListener("change", (event) => {
-    state.semester = event.target.value;
+function wire() {
+  $("#sessionSelect").addEventListener("change", (event) => {
+    state.session = event.target.value;
     renderAll();
   });
-  els.typeFilters.addEventListener("change", (event) => {
-    if (event.target.matches("input[type='checkbox']")) {
-      event.target.checked ? state.types.add(event.target.value) : state.types.delete(event.target.value);
+
+  document.addEventListener("change", (event) => {
+    if (event.target.matches(".semester-filter")) {
+      event.target.checked ? state.semesters.add(event.target.value) : state.semesters.delete(event.target.value);
+      renderAll();
+    }
+    if (event.target.matches(".category-filter")) {
+      event.target.checked ? state.categories.add(event.target.value) : state.categories.delete(event.target.value);
       renderAll();
     }
   });
-  document.querySelector("#resetFilters").addEventListener("click", () => {
-    state.semester = "all";
-    state.types = new Set(Object.keys(typeMeta));
-    els.semesterFilter.value = "all";
-    els.typeFilters.querySelectorAll("input").forEach((input) => { input.checked = true; });
+
+  $("#resetBtn").addEventListener("click", () => {
+    state.semesters = new Set(["1", "2"]);
+    state.categories = new Set(Object.keys(categories));
+    state.printSemester = "all";
+    document.querySelectorAll("input[type='checkbox']").forEach((input) => { input.checked = true; });
+    renderControls();
     renderAll();
   });
-  document.querySelector("#prevMonth").addEventListener("click", () => {
+
+  $("#prevMonth").addEventListener("click", () => {
     state.month = new Date(state.month.getFullYear(), state.month.getMonth() - 1, 1);
-    renderCalendar(filteredEvents());
+    renderCalendar(activeEvents());
   });
-  document.querySelector("#nextMonth").addEventListener("click", () => {
+
+  $("#nextMonth").addEventListener("click", () => {
     state.month = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 1);
-    renderCalendar(filteredEvents());
+    renderCalendar(activeEvents());
   });
-  document.querySelector("#todayBtn").addEventListener("click", () => {
+
+  $("#todayBtn").addEventListener("click", () => {
     const now = new Date();
     state.month = new Date(now.getFullYear(), now.getMonth(), 1);
-    renderCalendar(filteredEvents());
+    renderCalendar(activeEvents());
   });
-  document.querySelectorAll(".tab").forEach((tab) => {
-    tab.addEventListener("click", () => {
-      document.querySelectorAll(".tab, .view").forEach((el) => el.classList.remove("active"));
-      tab.classList.add("active");
-      document.querySelector(`#${tab.dataset.view}View`).classList.add("active");
-    });
-  });
-  document.querySelector("#themeBtn").addEventListener("click", () => {
-    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem("theme", next);
-    document.querySelector("#themeIcon").textContent = next === "dark" ? "☾" : "◐";
-  });
-  document.querySelector("#exportBtn").addEventListener("click", exportIcs);
-  document.querySelector("#printBtn").addEventListener("click", () => window.print());
-  document.querySelector("#closeDialog").addEventListener("click", () => els.dialog.close());
-}
 
-async function registerServiceWorker() {
-  if ("serviceWorker" in navigator) {
-    try {
-      await navigator.serviceWorker.register("sw.js");
-    } catch (error) {
-      console.warn("Service worker registration failed", error);
+  document.querySelectorAll(".tab[data-view]").forEach((tab) => tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab[data-view], .view").forEach((el) => el.classList.remove("active"));
+    tab.classList.add("active");
+    $(`#${tab.dataset.view}View`).classList.add("active");
+  }));
+
+  $("#langBtn").addEventListener("click", () => {
+    state.lang = state.lang === "ms" ? "en" : "ms";
+    localStorage.setItem("lang", state.lang);
+    renderControls();
+    renderAll();
+  });
+
+  $("#themeBtn").addEventListener("click", () => {
+    state.theme = state.theme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", state.theme);
+    document.documentElement.dataset.theme = state.theme;
+  });
+
+  $("#exportBtn").addEventListener("click", exportIcs);
+  $("#installBtn").addEventListener("click", async () => {
+    if (window.deferredPrompt) {
+      window.deferredPrompt.prompt();
+      window.deferredPrompt = null;
     }
-  }
+  });
+
+  document.querySelectorAll("[data-print]").forEach((button) => button.addEventListener("click", () => {
+    state.printSemester = button.dataset.print;
+    renderAll();
+    window.print();
+    state.printSemester = "all";
+    renderAll();
+  }));
+
+  $("#closeDialog").addEventListener("click", () => $("#eventDialog").close());
 }
 
-let deferredPrompt;
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
-  deferredPrompt = event;
-  document.querySelector("#installBtn").disabled = false;
+  window.deferredPrompt = event;
+  $("#installBtn").disabled = false;
 });
 
-document.querySelector("#installBtn").addEventListener("click", async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  await deferredPrompt.userChoice;
-  deferredPrompt = null;
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme) document.documentElement.dataset.theme = savedTheme;
-  document.querySelector("#themeIcon").textContent = savedTheme === "dark" ? "☾" : "◐";
-  document.querySelector("#installBtn").disabled = true;
-  renderFilters();
-  wireEvents();
+async function boot() {
+  document.documentElement.dataset.theme = state.theme;
+  $("#installBtn").disabled = true;
+  await loadData();
+  renderControls();
+  wire();
   renderAll();
-  registerServiceWorker();
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(console.warn);
+}
+
+boot().catch((error) => {
+  console.error(error);
+  document.body.insertAdjacentHTML("afterbegin", `<div class="panel" style="margin:1rem">Unable to load calendar data. Serve this folder through a local web server or deploy it to Vercel.</div>`);
 });

@@ -3,146 +3,132 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#006b3f" />
-    <meta name="description" content="Takwim Akademik Pusat Tamhidi USIM Sesi Akademik 2026/2027" />
-    <title>Takwim Akademik USIM 2026/2027</title>
+    <meta name="theme-color" content="#006c45" />
+    <title>USIM Tamhidi Calendar</title>
     <link rel="manifest" href="manifest.webmanifest" />
-    <link rel="apple-touch-icon" href="icons/icon.svg" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="app-header">
+    <header class="topbar">
       <div class="brand">
-        <img class="brand-logo" src="icons/usim-logo-official.png" alt="Logo rasmi USIM" />
+        <img class="brand-logo" src="icons/usim-logo-official.png" alt="USIM" />
         <div>
-          <p class="eyebrow">Pusat Tamhidi</p>
-          <h1>Takwim Akademik 2026/2027</h1>
-          <p class="subtitle">Universiti Sains Islam Malaysia</p>
+          <p class="overline" data-i18n="centre">Pusat Tamhidi</p>
+          <h1 data-i18n="appTitle">Takwim Akademik USIM</h1>
+          <p class="subhead" data-i18n="sessionText">Sesi Akademik 2026/2027</p>
         </div>
       </div>
-      <div class="header-actions">
-        <button class="icon-button" id="installBtn" type="button" title="Pasang aplikasi" aria-label="Pasang aplikasi">
-          <span>⬇</span>
-        </button>
-        <button class="icon-button" id="printBtn" type="button" title="Cetak A4" aria-label="Cetak A4">
-          <span>⎙</span>
-        </button>
-        <button class="icon-button" id="exportBtn" type="button" title="Export Google Calendar ICS" aria-label="Export Google Calendar ICS">
-          <span>↗</span>
-        </button>
-        <button class="icon-button" id="themeBtn" type="button" title="Tukar tema" aria-label="Tukar tema">
-          <span id="themeIcon">◐</span>
-        </button>
+      <div class="top-actions">
+        <button class="icon-btn" id="themeBtn" type="button" title="Dark mode">DM</button>
+        <button class="icon-btn" id="installBtn" type="button" title="Install PWA">IN</button>
+        <button class="icon-btn" id="exportBtn" type="button" title="Export ICS">ICS</button>
       </div>
     </header>
 
-    <main class="app-shell">
-      <aside class="sidebar" aria-label="Penapis takwim">
-        <section class="panel compact-panel">
-          <div class="panel-title">
-            <h2>Penapis</h2>
-            <button class="text-button" id="resetFilters" type="button">Reset</button>
+    <main class="layout">
+      <aside class="sidebar">
+        <section class="panel">
+          <div class="section-head">
+            <h2 data-i18n="controls">Kawalan</h2>
+            <button class="ghost" id="resetBtn" type="button" data-i18n="reset">Reset</button>
           </div>
           <label class="field">
-            <span>Semester</span>
-            <select id="semesterFilter">
-              <option value="all">Semua semester</option>
-              <option value="1">Semester I</option>
-              <option value="2">Semester II</option>
-            </select>
+            <span data-i18n="session">Sesi Akademik</span>
+            <select id="sessionSelect"></select>
           </label>
-          <div class="check-list" id="typeFilters"></div>
+          <div class="filter-block">
+            <p data-i18n="semester">Semester</p>
+            <label><input type="checkbox" class="semester-filter" value="1" checked /> Semester I</label>
+            <label><input type="checkbox" class="semester-filter" value="2" checked /> Semester II</label>
+          </div>
+          <div class="filter-block">
+            <p data-i18n="category">Kategori</p>
+            <div id="categoryFilters"></div>
+          </div>
         </section>
 
-        <section class="panel stats-panel">
-          <div class="panel-title">
-            <h2>Statistik</h2>
-            <span class="live-dot" aria-hidden="true"></span>
-          </div>
-          <div class="stats-grid" id="statsGrid"></div>
+        <section class="panel countdown">
+          <p class="overline" data-i18n="nextEvent">Acara Seterusnya</p>
+          <h2 id="nextTitle">-</h2>
+          <p id="nextDate">-</p>
+          <div class="count-number" id="countdownDays">0</div>
+          <p class="muted" data-i18n="daysRemaining">hari lagi</p>
         </section>
 
-        <section class="panel next-panel">
-          <div class="panel-title">
-            <h2>Aktiviti Terdekat</h2>
+        <section class="panel">
+          <div class="section-head">
+            <h2 data-i18n="print">Cetak</h2>
           </div>
-          <div class="next-list" id="nextList"></div>
+          <div class="print-actions">
+            <button class="ghost" data-print="all" type="button" data-i18n="printFull">Tahun Penuh</button>
+            <button class="ghost" data-print="1" type="button">Semester I</button>
+            <button class="ghost" data-print="2" type="button">Semester II</button>
+          </div>
         </section>
       </aside>
 
-      <section class="workspace">
-        <nav class="tabs" aria-label="Paparan">
-          <button class="tab active" data-view="calendar" type="button">Kalendar</button>
-          <button class="tab" data-view="timeline" type="button">Timeline</button>
-          <button class="tab" data-view="table" type="button">Jadual</button>
+      <section class="content">
+        <section class="dashboard" id="dashboard"></section>
+
+        <nav class="tabs" aria-label="Views">
+          <button class="tab active" data-view="calendar" type="button" data-i18n="calendar">Kalendar</button>
+          <button class="tab" data-view="agenda" type="button" data-i18n="agenda">Agenda</button>
+          <button class="tab" data-view="timeline" type="button" data-i18n="timeline">Timeline</button>
+          <button class="tab" data-view="table" type="button" data-i18n="table">Jadual</button>
+          <button class="tab" data-view="official" type="button" data-i18n="official">Rasmi</button>
+          <button class="tab" id="langBtn" type="button">EN</button>
         </nav>
 
-        <section class="view active" id="calendarView" aria-label="Paparan kalendar bulanan">
-          <div class="calendar-toolbar">
-            <div class="month-control">
-              <button class="icon-button small" id="prevMonth" type="button" aria-label="Bulan sebelumnya">‹</button>
-              <div>
-                <p class="eyebrow">Grid bulanan</p>
-                <h2 id="monthLabel"></h2>
-              </div>
-              <button class="icon-button small" id="nextMonth" type="button" aria-label="Bulan seterusnya">›</button>
+        <section class="view active" id="calendarView">
+          <div class="view-toolbar">
+            <button class="icon-btn" id="prevMonth" type="button">&lt;</button>
+            <div>
+              <p class="overline" data-i18n="monthView">Paparan Bulanan</p>
+              <h2 id="monthLabel"></h2>
             </div>
-            <button class="text-button" id="todayBtn" type="button">Hari ini</button>
+            <button class="icon-btn" id="nextMonth" type="button">&gt;</button>
+            <button class="ghost push" id="todayBtn" type="button" data-i18n="today">Hari ini</button>
           </div>
-          <div class="weekday-row" aria-hidden="true">
-            <span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span><span>Aha</span>
-          </div>
+          <div class="weekday"><span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span><span>Aha</span></div>
           <div class="calendar-grid" id="calendarGrid"></div>
         </section>
 
-        <section class="view" id="timelineView" aria-label="Timeline akademik">
-          <div class="panel timeline-panel">
-            <div class="panel-title">
-              <h2>Timeline / Gantt Interaktif</h2>
-              <span id="timelineRange"></span>
-            </div>
+        <section class="view" id="agendaView">
+          <div class="panel"><div class="agenda-list" id="agendaList"></div></div>
+        </section>
+
+        <section class="view" id="timelineView">
+          <div class="panel">
+            <div class="section-head"><h2 data-i18n="timelineTitle">Timeline / Gantt</h2><span id="timelineRange"></span></div>
             <div class="timeline-scale" id="timelineScale"></div>
             <div class="timeline-list" id="timelineList"></div>
           </div>
         </section>
 
-        <section class="view" id="tableView" aria-label="Jadual aktiviti akademik">
-          <div class="panel table-panel">
-            <div class="panel-title">
-              <h2>Jadual Takwim</h2>
-              <span id="tableCount"></span>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Aktiviti</th>
-                    <th>Kategori</th>
-                    <th>Semester</th>
-                    <th>Tarikh</th>
-                    <th>Tempoh</th>
-                  </tr>
-                </thead>
-                <tbody id="eventTable"></tbody>
-              </table>
-            </div>
+        <section class="view" id="tableView">
+          <div class="panel table-wrap">
+            <table>
+              <thead><tr><th data-i18n="activity">Aktiviti</th><th data-i18n="cat">Kategori</th><th>Semester</th><th data-i18n="date">Tarikh</th><th data-i18n="duration">Tempoh</th></tr></thead>
+              <tbody id="eventTable"></tbody>
+            </table>
           </div>
+        </section>
+
+        <section class="view" id="officialView">
+          <div class="panel official-document" id="officialDocument"></div>
         </section>
       </section>
     </main>
 
     <dialog id="eventDialog">
-      <button class="icon-button close" id="closeDialog" type="button" aria-label="Tutup">×</button>
-      <p class="eyebrow" id="dialogCategory"></p>
+      <button class="icon-btn close" id="closeDialog" type="button">x</button>
+      <p class="overline" id="dialogMeta"></p>
       <h2 id="dialogTitle"></h2>
       <p id="dialogDate"></p>
-      <p id="dialogMeta"></p>
     </dialog>
 
-    <template id="eventChipTemplate">
-      <button class="event-chip" type="button"></button>
-    </template>
-
+    <script src="events-data.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>

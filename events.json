@@ -1,0 +1,44 @@
+{
+  "sessions": [
+    {
+      "id": "2026-2027",
+      "label": "2026/2027",
+      "institution": "Universiti Sains Islam Malaysia",
+      "centre": "Pusat Tamhidi",
+      "start": "2026-06-13",
+      "end": "2027-06-06"
+    }
+  ],
+  "events": [
+    { "id": "s1-reg-online", "session": "2026-2027", "title": { "ms": "Pendaftaran Diri / Universiti Secara Dalam Talian", "en": "Online Self / University Registration" }, "start": "2026-06-13", "end": "2026-06-14", "category": "registration", "semester": 1 },
+    { "id": "s1-reg-hostel", "session": "2026-2027", "title": { "ms": "Pendaftaran Kolej Kediaman", "en": "Residential College Registration" }, "start": "2026-06-15", "end": "2026-06-16", "category": "registration", "semester": 1 },
+    { "id": "s1-taaruf", "session": "2026-2027", "title": { "ms": "Minggu Taaruf", "en": "Orientation Week" }, "start": "2026-06-17", "end": "2026-06-18", "category": "registration", "semester": 1 },
+    { "id": "s1-lecture-1", "session": "2026-2027", "title": { "ms": "Perkuliahan", "en": "Lectures" }, "start": "2026-06-22", "end": "2026-08-23", "category": "lecture", "semester": 1 },
+    { "id": "s1-mid-break", "session": "2026-2027", "title": { "ms": "Cuti Pertengahan Semester I", "en": "Semester I Mid-Semester Break" }, "start": "2026-08-24", "end": "2026-08-31", "category": "semesterBreak", "semester": 1 },
+    { "id": "s1-lecture-2", "session": "2026-2027", "title": { "ms": "Perkuliahan", "en": "Lectures" }, "start": "2026-09-01", "end": "2026-10-31", "category": "lecture", "semester": 1 },
+    { "id": "s1-revision", "session": "2026-2027", "title": { "ms": "Minggu Ulang Kaji", "en": "Revision Week" }, "start": "2026-11-01", "end": "2026-11-09", "category": "revision", "semester": 1 },
+    { "id": "s1-exam", "session": "2026-2027", "title": { "ms": "Peperiksaan Akhir Semester I", "en": "Semester I Final Examination" }, "start": "2026-11-10", "end": "2026-11-13", "category": "exam", "semester": 1 },
+    { "id": "s1-break", "session": "2026-2027", "title": { "ms": "Cuti Semester I", "en": "Semester I Break" }, "start": "2026-11-14", "end": "2026-12-13", "category": "semesterBreak", "semester": 1 },
+    { "id": "s2-course-reg", "session": "2026-2027", "title": { "ms": "Pendaftaran Kursus (Online)", "en": "Online Course Registration" }, "start": "2026-12-14", "end": "2026-12-14", "category": "registration", "semester": 2 },
+    { "id": "s2-lecture-1", "session": "2026-2027", "title": { "ms": "Perkuliahan", "en": "Lectures" }, "start": "2026-12-14", "end": "2027-02-14", "category": "lecture", "semester": 2 },
+    { "id": "s2-mid-break", "session": "2026-2027", "title": { "ms": "Cuti Pertengahan Semester II", "en": "Semester II Mid-Semester Break" }, "start": "2027-02-15", "end": "2027-02-21", "category": "semesterBreak", "semester": 2 },
+    { "id": "s2-lecture-2", "session": "2026-2027", "title": { "ms": "Perkuliahan", "en": "Lectures" }, "start": "2027-02-22", "end": "2027-04-25", "category": "lecture", "semester": 2 },
+    { "id": "s2-revision", "session": "2026-2027", "title": { "ms": "Minggu Ulang Kaji", "en": "Revision Week" }, "start": "2027-04-26", "end": "2027-05-02", "category": "revision", "semester": 2 },
+    { "id": "s2-exam", "session": "2026-2027", "title": { "ms": "Peperiksaan Akhir Semester II", "en": "Semester II Final Examination" }, "start": "2027-05-03", "end": "2027-05-07", "category": "exam", "semester": 2 },
+    { "id": "s2-break", "session": "2026-2027", "title": { "ms": "Cuti Semester II", "en": "Semester II Break" }, "start": "2027-05-08", "end": "2027-06-06", "category": "semesterBreak", "semester": 2 },
+    { "id": "h-awal-muharram", "session": "2026-2027", "title": { "ms": "Awal Muharram", "en": "Awal Muharram" }, "start": "2026-06-17", "end": "2026-06-17", "category": "publicHoliday", "semester": 1 },
+    { "id": "h-maulidur", "session": "2026-2027", "title": { "ms": "Hari Keputeraan Nabi Muhammad S.A.W", "en": "Prophet Muhammad's Birthday" }, "start": "2026-08-25", "end": "2026-08-25", "category": "publicHoliday", "semester": 1 },
+    { "id": "h-merdeka", "session": "2026-2027", "title": { "ms": "Hari Merdeka", "en": "National Day" }, "start": "2026-08-31", "end": "2026-08-31", "category": "publicHoliday", "semester": 1 },
+    { "id": "h-malaysia", "session": "2026-2027", "title": { "ms": "Hari Malaysia", "en": "Malaysia Day" }, "start": "2026-09-16", "end": "2026-09-16", "category": "publicHoliday", "semester": 1 },
+    { "id": "h-deepavali", "session": "2026-2027", "title": { "ms": "Cuti Gantian Deepavali", "en": "Deepavali Replacement Holiday" }, "start": "2026-11-09", "end": "2026-11-09", "category": "publicHoliday", "semester": 1 },
+    { "id": "h-christmas", "session": "2026-2027", "title": { "ms": "Hari Krismas", "en": "Christmas Day" }, "start": "2026-12-25", "end": "2026-12-25", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-new-year", "session": "2026-2027", "title": { "ms": "Cuti Tahun Baru 2027", "en": "New Year Holiday 2027" }, "start": "2027-01-01", "end": "2027-01-01", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-israk", "session": "2026-2027", "title": { "ms": "Cuti Israk dan Mikraj", "en": "Israk and Mikraj Holiday" }, "start": "2027-01-06", "end": "2027-01-06", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-ns-ruler", "session": "2026-2027", "title": { "ms": "Hari Keputeraan Yang di-Pertuan Besar Negeri Sembilan", "en": "Negeri Sembilan Ruler's Birthday" }, "start": "2027-01-14", "end": "2027-01-14", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-thaipusam", "session": "2026-2027", "title": { "ms": "Cuti Thaipusam", "en": "Thaipusam Holiday" }, "start": "2027-01-22", "end": "2027-01-22", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-cny-replacement", "session": "2026-2027", "title": { "ms": "Cuti Gantian Tahun Baru Cina", "en": "Chinese New Year Replacement Holiday" }, "start": "2027-02-08", "end": "2027-02-08", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-nuzul", "session": "2026-2027", "title": { "ms": "Hari Nuzul Al-Quran", "en": "Nuzul Al-Quran" }, "start": "2027-02-24", "end": "2027-02-24", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-aidilfitri", "session": "2026-2027", "title": { "ms": "Cuti Hari Raya Aidilfitri", "en": "Eid al-Fitr Holiday" }, "start": "2027-03-10", "end": "2027-03-11", "category": "publicHoliday", "semester": 2 },
+    { "id": "h-aidiladha", "session": "2026-2027", "title": { "ms": "Cuti Hari Raya Aidiladha", "en": "Eid al-Adha Holiday" }, "start": "2027-05-17", "end": "2027-05-17", "category": "publicHoliday", "semester": 2 }
+  ]
+}
