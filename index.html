@@ -81,6 +81,7 @@
 
         <nav class="tabs" aria-label="Views">
           <button class="tab active" data-view="calendar" type="button" data-i18n="calendar">Kalendar</button>
+          <button class="tab" data-view="planner" type="button" data-i18n="planner">Planner</button>
           <button class="tab" data-view="agenda" type="button" data-i18n="agenda">Agenda</button>
           <button class="tab" data-view="classes" type="button" data-i18n="classes">Kelas</button>
           <button class="tab" data-view="timeline" type="button" data-i18n="timeline">Timeline</button>
@@ -101,6 +102,71 @@
           </div>
           <div class="weekday"><span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span><span>Aha</span></div>
           <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <section class="view" id="plannerView">
+          <div class="planner-grid">
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="studentProfile">Profil Pelajar</h2>
+                <button class="ghost" id="saveProfileBtn" type="button" data-i18n="save">Simpan</button>
+              </div>
+              <div class="profile-form">
+                <label class="field"><span>Nama</span><input id="profileName" type="text" /></label>
+                <label class="field"><span>Fakulti</span><select id="profileFaculty"><option>FPQS</option><option>FKP</option><option>FST</option><option>FPSK</option><option>FEM</option><option>FPBU</option></select></label>
+                <label class="field"><span>Program</span><input id="profileProgramme" type="text" /></label>
+                <label class="field"><span>Intake</span><input id="profileIntake" type="number" min="2020" max="2035" /></label>
+                <label class="field"><span>Semester</span><input id="profileSemester" type="number" min="1" max="8" /></label>
+              </div>
+            </section>
+
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="semesterProgress">Progress Semester</h2>
+                <span id="semesterWeek"></span>
+              </div>
+              <div class="progress-track"><span id="semesterProgressBar"></span></div>
+              <div class="planner-metrics" id="plannerMetrics"></div>
+            </section>
+
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="taskTracker">Assignment & Exam Tracker</h2>
+              </div>
+              <form class="task-form" id="taskForm">
+                <input id="taskTitle" type="text" placeholder="Database Assignment" required />
+                <select id="taskType"><option value="assignment">Assignment</option><option value="presentation">Presentation</option><option value="quiz">Quiz</option><option value="exam">Exam</option></select>
+                <input id="taskDue" type="datetime-local" required />
+                <button class="ghost" type="submit" data-i18n="add">Tambah</button>
+              </form>
+              <div class="task-list" id="taskList"></div>
+            </section>
+
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="weeklyActions">Apa Perlu Buat Minggu Ini?</h2>
+              </div>
+              <div class="action-list" id="weeklyActions"></div>
+            </section>
+
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="assistant">Assistant</h2>
+              </div>
+              <div class="assistant-box">
+                <input id="assistantQuestion" type="text" placeholder="When is my next class?" />
+                <button class="ghost" id="askAssistantBtn" type="button">Ask</button>
+              </div>
+              <p class="assistant-answer" id="assistantAnswer"></p>
+            </section>
+
+            <section class="panel planner-panel">
+              <div class="section-head">
+                <h2 data-i18n="graduation">Graduation Journey</h2>
+              </div>
+              <div class="journey" id="graduationJourney"></div>
+            </section>
+          </div>
         </section>
 
         <section class="view" id="agendaView">

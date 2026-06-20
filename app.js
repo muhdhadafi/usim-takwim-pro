@@ -23,6 +23,7 @@ const i18n = {
     print: "Cetak",
     printFull: "Tahun Penuh",
     calendar: "Kalendar",
+    planner: "Planner",
     agenda: "Agenda",
     classes: "Kelas",
     classSchedule: "Jadual Kelas",
@@ -42,6 +43,7 @@ const i18n = {
     examDays: "Hari peperiksaan",
     upcomingExam: "Peperiksaan terdekat",
     noUpcoming: "Tiada acara akan datang"
+    , studentProfile: "Profil Pelajar", save: "Simpan", semesterProgress: "Progress Semester", taskTracker: "Assignment & Exam Tracker", add: "Tambah", weeklyActions: "Apa Perlu Buat Minggu Ini?", assistant: "Assistant", graduation: "Graduation Journey"
   },
   en: {
     centre: "Tamhidi Centre",
@@ -65,6 +67,7 @@ const i18n = {
     print: "Print",
     printFull: "Full Year",
     calendar: "Calendar",
+    planner: "Planner",
     agenda: "Agenda",
     classes: "Classes",
     classSchedule: "Class Schedule",
@@ -84,6 +87,7 @@ const i18n = {
     examDays: "Exam days",
     upcomingExam: "Upcoming exam",
     noUpcoming: "No upcoming events"
+    , studentProfile: "Student Profile", save: "Save", semesterProgress: "Semester Progress", taskTracker: "Assignment & Exam Tracker", add: "Add", weeklyActions: "What Should I Do This Week?", assistant: "Assistant", graduation: "Graduation Journey"
   }
 };
 
@@ -107,6 +111,14 @@ const state = {
   month: new Date(2026, 5, 1),
   printSemester: "all",
   reminderMinutes: Number(localStorage.getItem("classReminderMinutes") || 15),
+  profile: JSON.parse(localStorage.getItem("studentProfile") || "null") || {
+    name: "Rayyan Rizqi",
+    faculty: "FPQS",
+    programme: "Tamhidi of Syariah and Law",
+    intake: 2026,
+    semester: 1
+  },
+  tasks: JSON.parse(localStorage.getItem("studentTasks") || "[]"),
   notificationTimers: []
 };
 
@@ -466,6 +478,123 @@ function renderOfficialDocument() {
   `;
 }
 
+function saveProfile() {
+  state.profile = {
+    name: $("#profileName").value.trim() || "Rayyan Rizqi",
+    faculty: $("#profileFaculty").value,
+    programme: $("#profileProgramme").value.trim() || "Tamhidi of Syariah and Law",
+    intake: Number($("#profileIntake").value || 2026),
+    semester: Number($("#profileSemester").value || 1)
+  };
+  localStorage.setItem("studentProfile", JSON.stringify(state.profile));
+  renderPlanner();
+}
+
+function saveTasks() {
+  localStorage.setItem("studentTasks", JSON.stringify(state.tasks));
+}
+
+function semesterBounds() {
+  const lectures = state.data.events.filter((event) => event.session === state.session && event.semester === 1 && event.category === "lecture");
+  return {
+    start: parseDate(lectures[0]?.start || "2026-06-22"),
+    end: parseDate(lectures[lectures.length - 1]?.end || "2026-10-31")
+  };
+}
+
+function daysUntil(date) {
+  return Math.ceil((date - new Date()) / 86400000);
+}
+
+function renderPlanner() {
+  if (!$("#plannerView")) return;
+  $("#profileName").value = state.profile.name;
+  $("#profileFaculty").value = state.profile.faculty;
+  $("#profileProgramme").value = state.profile.programme;
+  $("#profileIntake").value = state.profile.intake;
+  $("#profileSemester").value = state.profile.semester;
+
+  const bounds = semesterBounds();
+  const now = new Date();
+  const total = Math.max(1, bounds.end - bounds.start);
+  const progress = Math.min(100, Math.max(0, Math.round(((now - bounds.start) / total) * 100)));
+  const week = Math.min(14, Math.max(1, Math.ceil(((now - bounds.start) / 86400000 + 1) / 7)));
+  const nextExam = state.data.events.find((event) => event.category === "exam" && parseDate(event.end) >= now);
+  const pendingTasks = state.tasks.filter((task) => !task.done).sort((a, b) => new Date(a.due) - new Date(b.due));
+  const weekTasks = pendingTasks.filter((task) => daysUntil(new Date(task.due)) <= 7);
+  const remainingHolidays = state.data.events.filter((event) => event.category === "publicHoliday" && parseDate(event.start) >= now).length;
+
+  $("#semesterWeek").textContent = `Week ${week}/14`;
+  $("#semesterProgressBar").style.width = `${progress}%`;
+  $("#semesterProgressBar").textContent = `${progress}%`;
+  $("#plannerMetrics").innerHTML = [
+    [`${Math.max(0, daysUntil(bounds.end))}`, "days until lectures end"],
+    [`${nextExam ? Math.max(0, daysUntil(parseDate(nextExam.start))) : "-"}`, "days until final exam"],
+    [`${pendingTasks.length}`, "pending tasks"],
+    [`${remainingHolidays}`, "holidays remaining"]
+  ].map(([value, label]) => `<article><strong>${value}</strong><span>${label}</span></article>`).join("");
+
+  $("#taskList").innerHTML = pendingTasks.length ? pendingTasks.map((task) => {
+    const left = daysUntil(new Date(task.due));
+    const urgency = left < 0 ? "late" : left <= 3 ? "soon" : "normal";
+    return `<article class="task-item ${urgency}">
+      <button class="task-check" data-task-id="${task.id}" type="button">OK</button>
+      <div><strong>${task.title}</strong><span>${task.type} - ${new Date(task.due).toLocaleString(locale())} - ${left < 0 ? Math.abs(left) + " days late" : left + " days left"}</span></div>
+    </article>`;
+  }).join("") : `<p class="muted">No pending assignments or exams yet.</p>`;
+
+  const nextClass = nextClassOccurrence(now);
+  const nextCalendarEvent = activeEvents().find((event) => parseDate(event.end) >= now);
+  const actions = [
+    nextClass ? `Attend ${nextClass.courseCode} at ${nextClass.start}, ${nextClass.venue}` : "Review your class timetable",
+    nextCalendarEvent ? `Check upcoming academic event: ${title(nextCalendarEvent)}` : "No academic event due soon",
+    weekTasks.length ? `Finish ${weekTasks[0].title} (${daysUntil(new Date(weekTasks[0].due))} days left)` : "Add your assignment or quiz deadlines",
+    nextExam ? `Start revision for finals (${Math.max(0, daysUntil(parseDate(nextExam.start)))} days left)` : "Keep lecture notes updated"
+  ];
+  $("#weeklyActions").innerHTML = actions.map((action) => `<label class="action-item"><input type="checkbox" /> ${action}</label>`).join("");
+
+  const year = Math.max(1, Math.ceil(state.profile.semester / 2));
+  $("#graduationJourney").innerHTML = [1, 2, 3, 4].map((item) => `<span class="${item < year ? "done" : item === year ? "current" : ""}">Year ${item}</span>`).join("") +
+    `<p class="muted">Expected graduation: July ${Number(state.profile.intake) + 4}</p>`;
+
+  document.querySelectorAll(".task-check").forEach((button) => button.addEventListener("click", () => {
+    const task = state.tasks.find((item) => item.id === button.dataset.taskId);
+    if (task) task.done = true;
+    saveTasks();
+    renderPlanner();
+  }));
+}
+
+function addTask(event) {
+  event.preventDefault();
+  state.tasks.push({
+    id: `task-${Date.now()}`,
+    title: $("#taskTitle").value.trim(),
+    type: $("#taskType").value,
+    due: $("#taskDue").value,
+    done: false
+  });
+  saveTasks();
+  $("#taskForm").reset();
+  renderPlanner();
+}
+
+function answerAssistant() {
+  const question = $("#assistantQuestion").value.toLowerCase();
+  const now = new Date();
+  const nextClass = nextClassOccurrence(now);
+  const nextBreak = state.data.events.find((event) => event.category === "semesterBreak" && parseDate(event.end) >= now);
+  const nextExam = state.data.events.find((event) => event.category === "exam" && parseDate(event.end) >= now);
+  const holidays = state.data.events.filter((event) => event.category === "publicHoliday" && event.semester === 1);
+  let answer = "Try asking: next class, semester break, finals, holidays, or pending tasks.";
+  if (question.includes("next class") || question.includes("kelas")) answer = nextClass ? `${nextClass.courseCode} ${nextClass.type}, ${dayLabel(nextClass.day)} ${timeText(nextClass)} at ${nextClass.venue}.` : "No upcoming class found.";
+  else if (question.includes("break") || question.includes("cuti semester")) answer = nextBreak ? `${nextBreak.title.ms}: ${dateRange(nextBreak)}.` : "No upcoming semester break found.";
+  else if (question.includes("final") || question.includes("exam")) answer = nextExam ? `${nextExam.title.ms} starts in ${Math.max(0, daysUntil(parseDate(nextExam.start)))} days (${dateRange(nextExam)}).` : "No upcoming exam found.";
+  else if (question.includes("holiday") || question.includes("cuti")) answer = holidays.map((event) => `${event.title.ms} (${dateRange(event)})`).join("; ");
+  else if (question.includes("task") || question.includes("assignment")) answer = state.tasks.filter((task) => !task.done).length ? `${state.tasks.filter((task) => !task.done).length} pending task(s).` : "No pending tasks.";
+  $("#assistantAnswer").textContent = answer;
+}
+
 function renderAll() {
   renderI18n();
   const events = activeEvents();
@@ -477,6 +606,7 @@ function renderAll() {
   renderTable(events);
   renderClassSchedule();
   renderOfficialDocument();
+  renderPlanner();
 }
 
 function openEvent(id) {
@@ -608,6 +738,13 @@ function wire() {
     document.querySelectorAll("input[type='checkbox']").forEach((input) => { input.checked = true; });
     renderControls();
     renderAll();
+  });
+
+  $("#saveProfileBtn").addEventListener("click", saveProfile);
+  $("#taskForm").addEventListener("submit", addTask);
+  $("#askAssistantBtn").addEventListener("click", answerAssistant);
+  $("#assistantQuestion").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") answerAssistant();
   });
 
   $("#prevMonth").addEventListener("click", () => {
