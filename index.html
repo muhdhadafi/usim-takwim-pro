@@ -56,6 +56,14 @@
           <p class="muted" data-i18n="daysRemaining">hari lagi</p>
         </section>
 
+        <section class="panel next-class-panel">
+          <p class="overline" data-i18n="nextClass">Kelas Seterusnya</p>
+          <h2 id="nextClassTitle">-</h2>
+          <p id="nextClassMeta">-</p>
+          <div class="count-number compact" id="nextClassCountdown">-</div>
+          <p class="muted" data-i18n="classCountdownLabel">ke kelas</p>
+        </section>
+
         <section class="panel">
           <div class="section-head">
             <h2 data-i18n="print">Cetak</h2>
@@ -74,6 +82,7 @@
         <nav class="tabs" aria-label="Views">
           <button class="tab active" data-view="calendar" type="button" data-i18n="calendar">Kalendar</button>
           <button class="tab" data-view="agenda" type="button" data-i18n="agenda">Agenda</button>
+          <button class="tab" data-view="classes" type="button" data-i18n="classes">Kelas</button>
           <button class="tab" data-view="timeline" type="button" data-i18n="timeline">Timeline</button>
           <button class="tab" data-view="table" type="button" data-i18n="table">Jadual</button>
           <button class="tab" data-view="official" type="button" data-i18n="official">Rasmi</button>
@@ -96,6 +105,37 @@
 
         <section class="view" id="agendaView">
           <div class="panel"><div class="agenda-list" id="agendaList"></div></div>
+        </section>
+
+        <section class="view" id="classesView">
+          <div class="panel class-panel">
+            <div class="section-head">
+              <h2 data-i18n="classSchedule">Jadual Kelas</h2>
+              <button class="ghost" id="exportClassBtn" type="button">ICS Kelas</button>
+            </div>
+            <div class="reminder-tools">
+              <label class="field">
+                <span data-i18n="reminderBefore">Reminder sebelum kelas</span>
+                <select id="reminderMinutes">
+                  <option value="10">10 minit</option>
+                  <option value="15">15 minit</option>
+                  <option value="30">30 minit</option>
+                  <option value="60">60 minit</option>
+                </select>
+              </label>
+              <button class="ghost" id="enableNotificationsBtn" type="button" data-i18n="enableNotifications">Aktifkan notifikasi</button>
+              <span class="reminder-status" id="reminderStatus">-</span>
+            </div>
+            <div class="today-classes" id="todayClasses"></div>
+            <div class="class-profile" id="classProfile"></div>
+            <div class="class-week" id="classWeek"></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>No.</th><th>Hari</th><th>Masa</th><th>Kod</th><th>Kursus</th><th>Jenis</th><th>Kumpulan</th><th>Tempat</th><th>Pensyarah</th></tr></thead>
+                <tbody id="classTable"></tbody>
+              </table>
+            </div>
+          </div>
         </section>
 
         <section class="view" id="timelineView">
@@ -129,6 +169,7 @@
     </dialog>
 
     <script src="events-data.js" defer></script>
+    <script src="class-schedule-data.js" defer></script>
     <script src="app.js" defer></script>
   </body>
 </html>

@@ -1,0 +1,38 @@
+﻿window.USIM_CLASS_SCHEDULE = {
+  "student": {
+    "name": "RAYYAN RIZQI BIN MUHAMMAD HADAFI",
+    "matricNumber": "9261942",
+    "programme": "UQ0381001 - TAMHIDI OF SYARIAH AND LAW",
+    "academicSession": "A261 - Semester I, Sesi 2026/2027",
+    "status": "REGISTERED",
+    "term": "A261"
+  },
+  "teachingWeeks": [
+    { "start": "2026-06-22", "end": "2026-08-23" },
+    { "start": "2026-09-01", "end": "2026-10-31" }
+  ],
+  "entries": [
+    { "no": 1, "day": "Monday", "start": "10:30", "end": "11:30", "courseCode": "TSU0134", "courseName": "INTRODUCTION TO MALAYSIAN LEGAL SYSTEM", "type": "Lecture", "group": "KTL3", "venue": "DKS 1.5 FKP", "lecturer": "MUHAMMAD AFIQ BIN BAHARUM" },
+    { "no": 2, "day": "Monday", "start": "12:30", "end": "13:30", "courseCode": "TSU0134", "courseName": "INTRODUCTION TO MALAYSIAN LEGAL SYSTEM", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 14 TAMH", "lecturer": "MOHAMAD AFIQ BIN MOHAMAD PADELI" },
+    { "no": 3, "day": "Monday", "start": "14:30", "end": "15:30", "courseCode": "TSU0144", "courseName": "INTRODUCTION TO LEGAL SKILLS", "type": "Lecture", "group": "KTL3", "venue": "DKS 1.5 FKP", "lecturer": "DR. NUR YUHANIS BINTI ISMON" },
+    { "no": 4, "day": "Monday", "start": "16:30", "end": "17:30", "courseCode": "TSU0124", "courseName": "INTRODUCTION TO THE PRINCIPLES OF ISLAMIC JURISPRUDENCE", "type": "Lecture", "group": "KTL3", "venue": "DKS 2.4 FPQS", "lecturer": "RASMINA BINTI HASBULLAH" },
+    { "no": 5, "day": "Tuesday", "start": "10:30", "end": "11:30", "courseCode": "TLE0013", "courseName": "FUNDAMENTALS OF ENGLISH", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 2 TAMH", "lecturer": "IRDINA FARHANA BINTI HAMMAD FARHI" },
+    { "no": 6, "day": "Tuesday", "start": "12:30", "end": "13:30", "courseCode": "TSU0134", "courseName": "INTRODUCTION TO MALAYSIAN LEGAL SYSTEM", "type": "Lecture", "group": "KTL3", "venue": "DKS 1.6 FKP", "lecturer": "MUHAMMAD AFIQ BIN BAHARUM" },
+    { "no": 7, "day": "Tuesday", "start": "14:30", "end": "15:30", "courseCode": "TSU0124", "courseName": "INTRODUCTION TO THE PRINCIPLES OF ISLAMIC JURISPRUDENCE", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "DKS 5 TAMH", "lecturer": "WAN SYAHANIM BINTI WAN NORDIN" },
+    { "no": 8, "day": "Wednesday", "start": "08:30", "end": "09:30", "courseCode": "TLA0032", "courseName": "FUNDAMENTALS OF ARABIC", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 3 TAMH", "lecturer": "NURHUSNA NABIHAH BINTI ABDUL HALIM" },
+    { "no": 9, "day": "Wednesday", "start": "12:30", "end": "13:30", "courseCode": "TSU0114", "courseName": "INTRODUCTION TO ISLAMIC LEGISLATION", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 12 TAMH", "lecturer": "WAN AMIR NUDIN BIN WAN ISHAK" },
+    { "no": 10, "day": "Wednesday", "start": "14:30", "end": "15:30", "courseCode": "TSU0144", "courseName": "INTRODUCTION TO LEGAL SKILLS", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 11 TAMH", "lecturer": "ALDAMIER BIN HADJIKAIN" },
+    { "no": 11, "day": "Wednesday", "start": "16:30", "end": "17:30", "courseCode": "TSU0114", "courseName": "INTRODUCTION TO ISLAMIC LEGISLATION", "type": "Lecture", "group": "KTL3", "venue": "DKS1.6 FSU", "lecturer": "DR. MUHAMMAD SOBRI BIN FAISAL" },
+    { "no": 12, "day": "Thursday", "start": "10:30", "end": "11:30", "courseCode": "TSU0152", "courseName": "ARABIC LANGUAGE FOR SHARIA", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 15 TAMH", "lecturer": "DR. UMMU-HANI BINTI ABAS" },
+    { "no": 13, "day": "Thursday", "start": "12:30", "end": "13:30", "courseCode": "TLE0013", "courseName": "FUNDAMENTALS OF ENGLISH", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "BT 9 TAMH", "lecturer": "IRDINA FARHANA BINTI HAMMAD FARHI" },
+    { "no": 14, "day": "Thursday", "start": "14:30", "end": "15:30", "courseCode": "TSU0124", "courseName": "INTRODUCTION TO THE PRINCIPLES OF ISLAMIC JURISPRUDENCE", "type": "Lecture", "group": "KTL3", "venue": "DKS 1.5 FKP", "lecturer": "RASMINA BINTI HASBULLAH" },
+    { "no": 15, "day": "Thursday", "start": "16:30", "end": "17:30", "courseCode": "TSU0144", "courseName": "INTRODUCTION TO LEGAL SKILLS", "type": "Lecture", "group": "KTL3", "venue": "DKS 2.4 FPQS", "lecturer": "DR. NUR YUHANIS BINTI ISMON" },
+    { "no": 16, "day": "Friday", "start": "08:30", "end": "09:30", "courseCode": "TSU0114", "courseName": "INTRODUCTION TO ISLAMIC LEGISLATION", "type": "Lecture", "group": "KTL3", "venue": "DKP 1 TAMH", "lecturer": "DR. MUHAMMAD SOBRI BIN FAISAL" },
+    { "no": 17, "day": "Friday", "start": "10:30", "end": "11:30", "courseCode": "TCL0052", "courseName": "COMPUTER SKILLS & TECHNOLOGY", "type": "Tutorial", "group": "TTL9 (KTL3)", "venue": "MSC06 MPG", "lecturer": "DR. NUR ILYANA BINTI ISMARAU TAJUDDIN" },
+    { "no": 18, "day": null, "start": null, "end": null, "courseCode": "TCL0052", "courseName": "COMPUTER SKILLS & TECHNOLOGY", "type": "Lecture", "group": "KTL3", "venue": null, "lecturer": null },
+    { "no": 19, "day": null, "start": null, "end": null, "courseCode": "TLA0032", "courseName": "FUNDAMENTALS OF ARABIC", "type": "Lecture", "group": "KTL3", "venue": null, "lecturer": null },
+    { "no": 20, "day": null, "start": null, "end": null, "courseCode": "TLE0013", "courseName": "FUNDAMENTALS OF ENGLISH", "type": "Lecture", "group": "KTL3", "venue": null, "lecturer": null },
+    { "no": 21, "day": null, "start": null, "end": null, "courseCode": "TSU0152", "courseName": "ARABIC LANGUAGE FOR SHARIA", "type": "Lecture", "group": "KTL3", "venue": null, "lecturer": null }
+  ]
+}
+;

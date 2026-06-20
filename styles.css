@@ -113,6 +113,14 @@ input { accent-color: var(--usim-green); }
 .countdown { text-align: center; }
 .countdown h2 { margin-bottom: .35rem; font-size: 1rem; }
 .count-number { margin: .7rem auto .15rem; color: var(--usim-green); font-size: 3rem; font-weight: 950; line-height: 1; }
+.count-number.compact { font-size: 1.8rem; }
+.next-class-panel h2 {
+  margin-bottom: .35rem;
+  font-size: 1rem;
+}
+.next-class-panel p {
+  margin-bottom: .45rem;
+}
 
 .dashboard { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
 .metric {
@@ -176,6 +184,125 @@ input { accent-color: var(--usim-green); }
 .agenda-item { display: grid; grid-template-columns: 7rem 1fr; gap: .8rem; padding: .75rem; border-left: 5px solid var(--usim-green); background: var(--soft); border-radius: .4rem; }
 .agenda-item strong { display: block; }
 .agenda-item span { color: var(--muted); font-size: .82rem; }
+
+.class-panel {
+  display: grid;
+  gap: 1rem;
+}
+.reminder-tools {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) auto minmax(10rem, 1fr);
+  gap: .75rem;
+  align-items: end;
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--soft);
+}
+.reminder-status {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+}
+.today-classes {
+  display: grid;
+  gap: .65rem;
+}
+.compact-head {
+  margin-bottom: 0;
+}
+.today-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .65rem;
+}
+.today-class {
+  padding: .65rem;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--usim-green);
+  border-radius: .4rem;
+  background: var(--soft);
+}
+.today-class.past { border-left-color: #8a8f98; opacity: .75; }
+.today-class.now { border-left-color: var(--exam); background: color-mix(in srgb, var(--exam) 10%, var(--paper)); }
+.today-class.upcoming { border-left-color: var(--usim-green); }
+.today-class strong,
+.today-class span,
+.today-class small {
+  display: block;
+}
+.today-class span,
+.today-class small {
+  color: var(--muted);
+  font-size: .76rem;
+}
+.class-profile {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .7rem;
+}
+.class-profile article {
+  min-height: 4.8rem;
+  padding: .75rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--soft);
+}
+.class-profile strong,
+.class-profile span {
+  display: block;
+}
+.class-profile strong {
+  font-size: .92rem;
+}
+.class-profile span {
+  margin-top: .25rem;
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+}
+.class-week {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(12rem, 1fr));
+  gap: .65rem;
+  overflow-x: auto;
+  padding-bottom: .15rem;
+}
+.class-day {
+  display: grid;
+  align-content: start;
+  gap: .5rem;
+  min-width: 12rem;
+  padding: .65rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--soft);
+}
+.class-day h3 {
+  margin: 0;
+  font-size: .9rem;
+}
+.class-card {
+  display: grid;
+  gap: .15rem;
+  width: 100%;
+  padding: .6rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--usim-green);
+  border-radius: .35rem;
+  background: var(--paper);
+  color: var(--text);
+  text-align: left;
+}
+.class-card strong {
+  font-size: .82rem;
+}
+.class-card span,
+.class-card small {
+  color: var(--muted);
+  font-size: .72rem;
+  line-height: 1.25;
+}
 
 .timeline-scale { display: grid; grid-template-columns: repeat(12, 1fr); gap: .2rem; color: var(--muted); font-size: .72rem; font-weight: 850; }
 .timeline-row { display: grid; grid-template-columns: minmax(10rem, 16rem) minmax(18rem, 1fr); gap: 1rem; align-items: center; padding: .65rem 0; border-top: 1px solid var(--line); }
@@ -253,6 +380,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
   .topbar { position: static; align-items: flex-start; flex-direction: column; }
   .top-actions { width: 100%; justify-content: space-between; }
   .sidebar, .dashboard { grid-template-columns: 1fr; }
+  .class-profile { grid-template-columns: 1fr; }
+  .reminder-tools, .today-list { grid-template-columns: 1fr; }
   .weekday { display: none; }
   .calendar-grid { grid-template-columns: 1fr; }
   .day-cell { min-height: 5.75rem; border-right: 0; }

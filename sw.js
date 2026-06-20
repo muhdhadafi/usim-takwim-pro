@@ -6,6 +6,8 @@ const ASSETS = [
   "./app.js",
   "./events.json",
   "./events-data.js",
+  "./class-schedule.json",
+  "./class-schedule-data.js",
   "./manifest.webmanifest",
   "./icons/usim-logo-official.png",
   "./icons/icon-192.png",

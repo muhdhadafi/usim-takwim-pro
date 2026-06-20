@@ -11,11 +11,21 @@ const i18n = {
     semester: "Semester",
     category: "Kategori",
     nextEvent: "Acara Seterusnya",
+    nextClass: "Kelas Seterusnya",
+    classCountdownLabel: "ke kelas",
+    reminderBefore: "Reminder sebelum kelas",
+    enableNotifications: "Aktifkan notifikasi",
+    todayClasses: "Kelas Hari Ini",
+    noClassToday: "Tiada kelas hari ini",
+    notificationReady: "Notifikasi aktif semasa app dibuka",
+    notificationDenied: "Notifikasi disekat browser",
     daysRemaining: "hari lagi",
     print: "Cetak",
     printFull: "Tahun Penuh",
     calendar: "Kalendar",
     agenda: "Agenda",
+    classes: "Kelas",
+    classSchedule: "Jadual Kelas",
     timeline: "Timeline",
     table: "Jadual",
     official: "Rasmi",
@@ -43,11 +53,21 @@ const i18n = {
     semester: "Semester",
     category: "Category",
     nextEvent: "Next Event",
+    nextClass: "Next Class",
+    classCountdownLabel: "to class",
+    reminderBefore: "Reminder before class",
+    enableNotifications: "Enable notifications",
+    todayClasses: "Today's Classes",
+    noClassToday: "No class today",
+    notificationReady: "Notifications active while app is open",
+    notificationDenied: "Notifications blocked by browser",
     daysRemaining: "days remaining",
     print: "Print",
     printFull: "Full Year",
     calendar: "Calendar",
     agenda: "Agenda",
+    classes: "Classes",
+    classSchedule: "Class Schedule",
     timeline: "Timeline",
     table: "Table",
     official: "Official",
@@ -78,13 +98,16 @@ const categories = {
 
 const state = {
   data: { sessions: [], events: [] },
+  classSchedule: window.USIM_CLASS_SCHEDULE || { student: {}, teachingWeeks: [], entries: [] },
   lang: localStorage.getItem("lang") || "ms",
   theme: localStorage.getItem("theme") || "light",
   session: "2026-2027",
   semesters: new Set(["1", "2"]),
   categories: new Set(Object.keys(categories)),
   month: new Date(2026, 5, 1),
-  printSemester: "all"
+  printSemester: "all",
+  reminderMinutes: Number(localStorage.getItem("classReminderMinutes") || 15),
+  notificationTimers: []
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -104,6 +127,17 @@ function fmtMonth() {
 function parseDate(value) {
   const [year, month, day] = value.split("-").map(Number);
   return new Date(year, month - 1, day);
+}
+
+function dateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function combineDateTime(date, time) {
+  const [hours, minutes] = time.split(":").map(Number);
+  const copy = new Date(date);
+  copy.setHours(hours, minutes, 0, 0);
+  return copy;
 }
 
 function addDays(date, amount) {
@@ -151,6 +185,10 @@ async function loadData() {
     state.data = await response.json();
   }
   state.session = state.data.sessions[0]?.id || "2026-2027";
+  if (!window.USIM_CLASS_SCHEDULE) {
+    const classResponse = await fetch("class-schedule.json", { cache: "no-store" });
+    state.classSchedule = await classResponse.json();
+  }
 }
 
 function renderI18n() {
@@ -262,6 +300,128 @@ function renderTable(events) {
   </tr>`).join("");
 }
 
+function dayLabel(day) {
+  const labels = {
+    Monday: state.lang === "ms" ? "Isnin" : "Monday",
+    Tuesday: state.lang === "ms" ? "Selasa" : "Tuesday",
+    Wednesday: state.lang === "ms" ? "Rabu" : "Wednesday",
+    Thursday: state.lang === "ms" ? "Khamis" : "Thursday",
+    Friday: state.lang === "ms" ? "Jumaat" : "Friday"
+  };
+  return labels[day] || "-";
+}
+
+function timeText(entry) {
+  return entry.start && entry.end ? `${entry.start} - ${entry.end}` : "-";
+}
+
+function scheduledClasses() {
+  return state.classSchedule.entries.filter((entry) => entry.day && entry.start && entry.end);
+}
+
+function classOccurrences() {
+  const occurrences = [];
+  scheduledClasses().forEach((entry) => {
+    state.classSchedule.teachingWeeks.forEach((range) => {
+      let day = firstDayInRange(range.start, entry.day);
+      const end = parseDate(range.end);
+      while (day <= end) {
+        occurrences.push({
+          ...entry,
+          date: new Date(day),
+          startsAt: combineDateTime(day, entry.start),
+          endsAt: combineDateTime(day, entry.end)
+        });
+        day = addDays(day, 7);
+      }
+    });
+  });
+  return occurrences.sort((a, b) => a.startsAt - b.startsAt);
+}
+
+function nextClassOccurrence(now = new Date()) {
+  return classOccurrences().find((occurrence) => occurrence.endsAt >= now);
+}
+
+function formatClassCountdown(occurrence, now = new Date()) {
+  if (!occurrence) return "-";
+  const diff = occurrence.startsAt - now;
+  if (diff <= 0 && occurrence.endsAt >= now) return state.lang === "ms" ? "Sedang berlangsung" : "In progress";
+  if (diff < 0) return state.lang === "ms" ? "Selesai" : "Done";
+  const minutes = Math.ceil(diff / 60000);
+  const days = Math.floor(minutes / 1440);
+  const hours = Math.floor((minutes % 1440) / 60);
+  const mins = minutes % 60;
+  if (days > 0) return `${days}d ${hours}j`;
+  if (hours > 0) return `${hours}j ${mins}m`;
+  return `${mins}m`;
+}
+
+function classStatus(occurrence, now = new Date()) {
+  if (occurrence.startsAt <= now && occurrence.endsAt >= now) return "now";
+  if (occurrence.endsAt < now) return "past";
+  return "upcoming";
+}
+
+function renderClassSchedule() {
+  const schedule = state.classSchedule;
+  const scheduled = scheduledClasses();
+  const courses = new Set(schedule.entries.map((entry) => entry.courseCode));
+  const now = new Date();
+  const next = nextClassOccurrence(now);
+  const todays = classOccurrences().filter((occurrence) => dateKey(occurrence.startsAt) === dateKey(now));
+
+  $("#nextClassTitle").textContent = next ? `${next.courseCode} ${next.type}` : "-";
+  $("#nextClassMeta").textContent = next ? `${dayLabel(next.day)} ${timeText(next)} - ${next.venue}` : "-";
+  $("#nextClassCountdown").textContent = formatClassCountdown(next, now);
+
+  $("#todayClasses").innerHTML = `
+    <div class="section-head compact-head"><h2>${i18n[state.lang].todayClasses}</h2><span>${todays.length}</span></div>
+    <div class="today-list">
+      ${todays.length ? todays.map((entry) => {
+        const status = classStatus(entry, now);
+        return `<article class="today-class ${status}">
+          <strong>${entry.start} ${entry.courseCode}</strong>
+          <span>${entry.courseName}</span>
+          <small>${entry.venue} - ${status === "past" ? "past/missed" : status === "now" ? "now" : "upcoming"}</small>
+        </article>`;
+      }).join("") : `<p class="muted">${i18n[state.lang].noClassToday}</p>`}
+    </div>
+  `;
+
+  $("#classProfile").innerHTML = `
+    <article><strong>${schedule.student.name || "-"}</strong><span>${schedule.student.matricNumber || "-"}</span></article>
+    <article><strong>${schedule.student.programme || "-"}</strong><span>${schedule.student.academicSession || "-"}</span></article>
+    <article><strong>${scheduled.length}</strong><span>Slot mingguan</span></article>
+    <article><strong>${courses.size}</strong><span>Kursus</span></article>
+  `;
+
+  const grouped = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].map((day) => {
+    const entries = scheduled.filter((entry) => entry.day === day);
+    return `<section class="class-day">
+      <h3>${dayLabel(day)}</h3>
+      ${entries.map((entry) => `<button class="class-card" type="button" data-class-no="${entry.no}">
+        <strong>${entry.start} ${entry.courseCode}</strong>
+        <span>${entry.courseName}</span>
+        <small>${entry.type} - ${entry.venue}</small>
+      </button>`).join("")}
+    </section>`;
+  }).join("");
+  $("#classWeek").innerHTML = grouped;
+
+  $("#classTable").innerHTML = schedule.entries.map((entry) => `<tr>
+    <td>${entry.no}</td>
+    <td>${dayLabel(entry.day)}</td>
+    <td>${timeText(entry)}</td>
+    <td><strong>${entry.courseCode}</strong></td>
+    <td>${entry.courseName}</td>
+    <td>${entry.type}</td>
+    <td>${entry.group}</td>
+    <td>${entry.venue || "-"}</td>
+    <td>${entry.lecturer || "-"}</td>
+  </tr>`).join("");
+}
+
 function durationText(event) {
   if (["s1-lecture-1", "s1-lecture-2", "s2-lecture-1", "s2-lecture-2"].includes(event.id)) return "9 minggu";
   if (["s1-break", "s2-break"].includes(event.id)) return "4 minggu";
@@ -315,6 +475,7 @@ function renderAll() {
   renderAgenda(events);
   renderTimeline(events);
   renderTable(events);
+  renderClassSchedule();
   renderOfficialDocument();
 }
 
@@ -344,6 +505,83 @@ function exportIcs() {
   link.download = `usim-tamhidi-${state.session}.ics`;
   link.click();
   URL.revokeObjectURL(link.href);
+}
+
+function dayToIndex(day) {
+  return { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 }[day];
+}
+
+function firstDayInRange(rangeStart, day) {
+  const start = parseDate(rangeStart);
+  const diff = (dayToIndex(day) - start.getDay() + 7) % 7;
+  return addDays(start, diff);
+}
+
+function icsDateTime(date, time) {
+  const [hours, minutes] = time.split(":").map(Number);
+  const copy = new Date(date);
+  copy.setHours(hours, minutes, 0, 0);
+  return `${copy.getFullYear()}${String(copy.getMonth() + 1).padStart(2, "0")}${String(copy.getDate()).padStart(2, "0")}T${String(hours).padStart(2, "0")}${String(minutes).padStart(2, "0")}00`;
+}
+
+function exportClassIcs() {
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//USIM//Class Schedule A261//MS", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:USIM Class Schedule A261"];
+  scheduledClasses().forEach((entry) => {
+    state.classSchedule.teachingWeeks.forEach((range, index) => {
+      const first = firstDayInRange(range.start, entry.day);
+      if (first > parseDate(range.end)) return;
+      lines.push(
+        "BEGIN:VEVENT",
+        `UID:class-${entry.no}-${index}@usim-takwim-pro`,
+        `SUMMARY:${entry.courseCode} ${entry.type} - ${entry.courseName.replaceAll(",", "\\,")}`,
+        `DTSTART:${icsDateTime(first, entry.start)}`,
+        `DTEND:${icsDateTime(first, entry.end)}`,
+        `RRULE:FREQ=WEEKLY;UNTIL:${icsDateTime(parseDate(range.end), "23:59").replace("T235900", "T235959")}`,
+        `LOCATION:${entry.venue || ""}`,
+        `DESCRIPTION:Group ${entry.group} - Lecturer ${entry.lecturer || "-"}`,
+        "BEGIN:VALARM",
+        `TRIGGER:-PT${state.reminderMinutes}M`,
+        "ACTION:DISPLAY",
+        `DESCRIPTION:${entry.courseCode} starts in ${state.reminderMinutes} minutes at ${entry.venue || "class venue"}`,
+        "END:VALARM",
+        "END:VEVENT"
+      );
+    });
+  });
+  lines.push("END:VCALENDAR");
+  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "usim-class-schedule-a261.ics";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function clearNotificationTimers() {
+  state.notificationTimers.forEach((timer) => clearTimeout(timer));
+  state.notificationTimers = [];
+}
+
+function scheduleClassNotifications() {
+  clearNotificationTimers();
+  if (!("Notification" in window) || Notification.permission !== "granted") return;
+  const now = new Date();
+  const horizon = addDays(now, 7);
+  classOccurrences()
+    .filter((occurrence) => occurrence.startsAt > now && occurrence.startsAt <= horizon)
+    .forEach((occurrence) => {
+      const triggerAt = occurrence.startsAt.getTime() - state.reminderMinutes * 60000;
+      const delay = triggerAt - now.getTime();
+      if (delay < 0) return;
+      const timer = setTimeout(() => {
+        new Notification(`${occurrence.courseCode} ${occurrence.type}`, {
+          body: `${occurrence.courseName}\n${occurrence.start} at ${occurrence.venue}`,
+          tag: `class-${occurrence.no}-${dateKey(occurrence.startsAt)}`
+        });
+      }, delay);
+      state.notificationTimers.push(timer);
+    });
+  $("#reminderStatus").textContent = i18n[state.lang].notificationReady;
 }
 
 function wire() {
@@ -408,6 +646,22 @@ function wire() {
   });
 
   $("#exportBtn").addEventListener("click", exportIcs);
+  $("#exportClassBtn").addEventListener("click", exportClassIcs);
+  $("#reminderMinutes").value = String(state.reminderMinutes);
+  $("#reminderMinutes").addEventListener("change", (event) => {
+    state.reminderMinutes = Number(event.target.value);
+    localStorage.setItem("classReminderMinutes", String(state.reminderMinutes));
+    scheduleClassNotifications();
+  });
+  $("#enableNotificationsBtn").addEventListener("click", async () => {
+    if (!("Notification" in window)) {
+      $("#reminderStatus").textContent = "Notification API unavailable";
+      return;
+    }
+    const permission = await Notification.requestPermission();
+    $("#reminderStatus").textContent = permission === "granted" ? i18n[state.lang].notificationReady : i18n[state.lang].notificationDenied;
+    scheduleClassNotifications();
+  });
   $("#installBtn").addEventListener("click", async () => {
     if (window.deferredPrompt) {
       window.deferredPrompt.prompt();
@@ -439,6 +693,7 @@ async function boot() {
   renderControls();
   wire();
   renderAll();
+  scheduleClassNotifications();
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(console.warn);
 }
 
