@@ -81,6 +81,7 @@
 
         <nav class="tabs" aria-label="Views">
           <button class="tab active" data-view="calendar" type="button" data-i18n="calendar">Kalendar</button>
+          <button class="tab" data-view="companion" type="button">Companion</button>
           <button class="tab" data-view="planner" type="button" data-i18n="planner">Planner</button>
           <button class="tab" data-view="agenda" type="button" data-i18n="agenda">Agenda</button>
           <button class="tab" data-view="classes" type="button" data-i18n="classes">Kelas</button>
@@ -102,6 +103,88 @@
           </div>
           <div class="weekday"><span>Isn</span><span>Sel</span><span>Rab</span><span>Kha</span><span>Jum</span><span>Sab</span><span>Aha</span></div>
           <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+
+        <section class="view" id="companionView">
+          <div class="companion-grid">
+            <section class="panel companion-hero">
+              <div>
+                <p class="overline">Tamhidi Student Companion</p>
+                <h2 id="dailyGreeting">Assalamualaikum Rayyan</h2>
+                <p id="dailySummary" class="muted"></p>
+              </div>
+              <div class="daily-stack" id="dailyStack"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>First Week Checklist</h2><span id="checklistProgress">0/0</span></div>
+              <div class="checklist" id="firstWeekChecklist"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Tamhidi Survival Guide</h2></div>
+              <div class="guide-list" id="survivalGuide"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Attendance Tracker</h2><button class="ghost" id="addAttendanceBtn" type="button">Add Subject</button></div>
+              <div class="attendance-list" id="attendanceList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>GPA & Degree Eligibility</h2></div>
+              <div class="gpa-tool">
+                <label class="field"><span>Current GPA</span><input id="gpaInput" type="number" min="0" max="4" step="0.01" /></label>
+                <button class="ghost" id="calcGpaBtn" type="button">Check</button>
+              </div>
+              <div class="eligibility-list" id="eligibilityList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Study Resources Hub</h2></div>
+              <div class="resource-grid" id="resourceHub"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Budget Planner</h2></div>
+              <div class="budget-grid">
+                <label class="field"><span>Allowance</span><input id="budgetAllowance" type="number" min="0" /></label>
+                <label class="field"><span>Food</span><input id="budgetFood" type="number" min="0" /></label>
+                <label class="field"><span>Transport</span><input id="budgetTransport" type="number" min="0" /></label>
+                <label class="field"><span>Printing/Books</span><input id="budgetBooks" type="number" min="0" /></label>
+              </div>
+              <strong class="budget-balance" id="budgetBalance">RM0</strong>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Prayer Times</h2><span>Nilai/Sepang</span></div>
+              <div class="prayer-grid">
+                <label class="field"><span>Subuh</span><input class="prayer-input" data-prayer="Subuh" type="time" value="05:50" /></label>
+                <label class="field"><span>Zohor</span><input class="prayer-input" data-prayer="Zohor" type="time" value="13:12" /></label>
+                <label class="field"><span>Asar</span><input class="prayer-input" data-prayer="Asar" type="time" value="16:35" /></label>
+                <label class="field"><span>Maghrib</span><input class="prayer-input" data-prayer="Maghrib" type="time" value="19:25" /></label>
+                <label class="field"><span>Isyak</span><input class="prayer-input" data-prayer="Isyak" type="time" value="20:38" /></label>
+              </div>
+              <p class="assistant-answer" id="nextPrayerText"></p>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Campus Explorer</h2></div>
+              <div class="campus-grid" id="campusExplorer"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Roadmap & Parent Mode</h2></div>
+              <div class="roadmap" id="tamhidiRoadmap"></div>
+              <div class="parent-box" id="parentMode"></div>
+            </section>
+
+            <section class="panel">
+              <div class="section-head"><h2>Smart FAQ</h2></div>
+              <input id="faqSearch" type="text" placeholder="Search registration, finals, attendance..." />
+              <div class="faq-list" id="faqList"></div>
+            </section>
+          </div>
         </section>
 
         <section class="view" id="plannerView">

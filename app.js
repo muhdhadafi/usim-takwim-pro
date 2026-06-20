@@ -119,6 +119,13 @@ const state = {
     semester: 1
   },
   tasks: JSON.parse(localStorage.getItem("studentTasks") || "[]"),
+  checklist: JSON.parse(localStorage.getItem("tamhidiChecklist") || "null") || {},
+  attendance: JSON.parse(localStorage.getItem("attendanceTracker") || "null") || [
+    { id: "att-tsu0134", subject: "TSU0134 Malaysian Legal System", attended: 0, total: 0 },
+    { id: "att-tsu0124", subject: "TSU0124 Islamic Jurisprudence", attended: 0, total: 0 },
+    { id: "att-tsu0114", subject: "TSU0114 Islamic Legislation", attended: 0, total: 0 }
+  ],
+  budget: JSON.parse(localStorage.getItem("studentBudget") || "null") || { allowance: 0, food: 0, transport: 0, books: 0 },
   notificationTimers: []
 };
 
@@ -595,6 +602,144 @@ function answerAssistant() {
   $("#assistantAnswer").textContent = answer;
 }
 
+const firstWeekItems = [
+  "Activate student email",
+  "Register courses",
+  "Download timetable",
+  "Join faculty WhatsApp/Telegram",
+  "Locate lecture halls",
+  "Locate library",
+  "Find cafeteria and food options",
+  "Obtain matric card"
+];
+
+const guideItems = [
+  ["What is Tamhidi?", "Foundation year that prepares students for degree study at USIM."],
+  ["CGPA basics", "Each course contributes grade points. Keep steady coursework marks before finals."],
+  ["Attendance rule", "Aim for at least 80% attendance for every course to stay examination-safe."],
+  ["Exam system", "Revision week comes before final examination. Plan notes by course, not by panic."],
+  ["If you fail a subject", "Check official faculty instructions, repeat/appeal rules, and meet your academic advisor early."],
+  ["Semester structure", "Registration, lectures, mid-semester break, lectures, revision, finals, semester break."]
+];
+
+const campusPlaces = [
+  ["Faculty buildings", "FKP, FPQS, FSU and nearby lecture venues used in your timetable."],
+  ["Lecture halls", "DKS, DKP, BT rooms and tutorial rooms. Visit once before first class."],
+  ["Library", "Use for printing, references, quiet revision and past-year paper searching."],
+  ["Cafeteria", "Plan meal time between 12:30 and afternoon classes."],
+  ["Surau/Masjid", "Useful between Zohor/Asar and evening activities."],
+  ["Bus stops", "Check route early during orientation week."],
+  ["ATM", "Keep emergency cash for food, printing and transport."],
+  ["Clinic", "Save location and operating hours before you need it."]
+];
+
+const resources = [
+  ["TSU0134", "Malaysian Legal System", "Case summaries, lecture notes, tutorial questions"],
+  ["TSU0124", "Islamic Jurisprudence", "Usul fiqh terms, concept maps, past questions"],
+  ["TSU0114", "Islamic Legislation", "Legislation notes, comparison tables"],
+  ["TSU0144", "Legal Skills", "Moot/presentation tips, writing templates"],
+  ["TLA0032", "Arabic", "Vocabulary drills, grammar charts"],
+  ["TLE0013", "English", "Presentation scripts, essay outlines"]
+];
+
+const faqItems = [
+  ["When is registration?", "Semester I registration is 13-16 June 2026, with orientation on 17-18 June 2026."],
+  ["When are finals?", "Semester I final examination is 10-13 November 2026. Semester II final examination is 3-7 May 2027."],
+  ["When is semester break?", "Semester I break is 14 November-13 December 2026. Semester II break is 8 May-6 June 2027."],
+  ["What if attendance is below 80%?", "Treat it as urgent. Speak to the lecturer or academic office and avoid further absence."],
+  ["How to calculate GPA?", "Multiply each course grade point by credit hours, total them, then divide by total credit hours."],
+  ["How to appeal results?", "Follow official USIM/faculty appeal instructions after result release and meet deadlines."]
+];
+
+function saveCompanionState() {
+  localStorage.setItem("tamhidiChecklist", JSON.stringify(state.checklist));
+  localStorage.setItem("attendanceTracker", JSON.stringify(state.attendance));
+  localStorage.setItem("studentBudget", JSON.stringify(state.budget));
+}
+
+function nextPrayer() {
+  const now = new Date();
+  const prayers = [...document.querySelectorAll(".prayer-input")].map((input) => {
+    const [hours, minutes] = input.value.split(":").map(Number);
+    const at = new Date(now);
+    at.setHours(hours, minutes, 0, 0);
+    return { name: input.dataset.prayer, at };
+  }).sort((a, b) => a.at - b.at);
+  return prayers.find((item) => item.at >= now) || { ...prayers[0], at: addDays(prayers[0].at, 1) };
+}
+
+function renderCompanion() {
+  if (!$("#companionView")) return;
+  const now = new Date();
+  const todays = classOccurrences().filter((occurrence) => dateKey(occurrence.startsAt) === dateKey(now));
+  const nextClass = nextClassOccurrence(now);
+  const nextExam = state.data.events.find((event) => event.category === "exam" && parseDate(event.end) >= now);
+  const pendingTasks = state.tasks.filter((task) => !task.done).sort((a, b) => new Date(a.due) - new Date(b.due));
+  const nextHoliday = state.data.events.find((event) => event.category === "publicHoliday" && parseDate(event.start) >= now);
+
+  $("#dailyGreeting").textContent = `Assalamualaikum ${state.profile.name || "Rayyan"}`;
+  $("#dailySummary").textContent = `${todays.length} class(es) today. ${pendingTasks.length} pending task(s).`;
+  $("#dailyStack").innerHTML = [
+    ["Today", `${todays.length} classes`],
+    ["Next class", nextClass ? `${nextClass.courseCode} ${nextClass.start}` : "-"],
+    ["Final exam", nextExam ? `${Math.max(0, daysUntil(parseDate(nextExam.start)))} days` : "-"],
+    ["Holiday", nextHoliday ? `${nextHoliday.title.ms}` : "-"]
+  ].map(([label, value]) => `<article><span>${label}</span><strong>${value}</strong></article>`).join("");
+
+  $("#firstWeekChecklist").innerHTML = firstWeekItems.map((item) => `<label class="check-item-row"><input type="checkbox" data-check="${item}" ${state.checklist[item] ? "checked" : ""} /> ${item}</label>`).join("");
+  const done = firstWeekItems.filter((item) => state.checklist[item]).length;
+  $("#checklistProgress").textContent = `${done}/${firstWeekItems.length}`;
+
+  $("#survivalGuide").innerHTML = guideItems.map(([head, body]) => `<details><summary>${head}</summary><p>${body}</p></details>`).join("");
+
+  $("#attendanceList").innerHTML = state.attendance.map((item) => {
+    const pct = item.total ? Math.round((item.attended / item.total) * 100) : 100;
+    return `<article class="attendance-item ${pct < 80 ? "danger" : ""}">
+      <strong>${item.subject}</strong>
+      <span>${item.attended}/${item.total} attended - ${pct}%</span>
+      <div><button class="ghost" data-attend="${item.id}" type="button">Attend</button><button class="ghost" data-miss="${item.id}" type="button">Miss</button></div>
+    </article>`;
+  }).join("");
+
+  $("#resourceHub").innerHTML = resources.map(([code, name, detail]) => `<article><strong>${code}</strong><span>${name}</span><small>${detail}</small></article>`).join("");
+
+  $("#campusExplorer").innerHTML = campusPlaces.map(([place, detail]) => `<article><strong>${place}</strong><span>${detail}</span></article>`).join("");
+
+  const prayer = nextPrayer();
+  $("#nextPrayerText").textContent = `Next prayer: ${prayer.name} at ${prayer.at.toLocaleTimeString(locale(), { hour: "numeric", minute: "2-digit" })}`;
+
+  const remaining = Number(state.budget.allowance) - Number(state.budget.food) - Number(state.budget.transport) - Number(state.budget.books);
+  $("#budgetAllowance").value = state.budget.allowance;
+  $("#budgetFood").value = state.budget.food;
+  $("#budgetTransport").value = state.budget.transport;
+  $("#budgetBooks").value = state.budget.books;
+  $("#budgetBalance").textContent = `Remaining balance: RM${remaining}`;
+
+  $("#tamhidiRoadmap").innerHTML = ["Semester 1", "Semester 2", "Result Release", "Degree Placement", "Law / Syariah Degree"].map((step, index) => `<span class="${index === 0 ? "current" : ""}">${step}</span>`).join("");
+  $("#parentMode").innerHTML = `<strong>Parent Mode</strong><span>Next exam: ${nextExam ? dateRange(nextExam) : "-"}</span><span>Next break/holiday: ${nextHoliday ? `${nextHoliday.title.ms} (${dateRange(nextHoliday)})` : "-"}</span>`;
+
+  renderEligibility(Number($("#gpaInput").value || localStorage.getItem("studentGpa") || 0));
+  renderFaq();
+}
+
+function renderEligibility(gpa) {
+  localStorage.setItem("studentGpa", String(gpa || 0));
+  $("#gpaInput").value = gpa || "";
+  const programmes = [
+    ["Syariah", 2.0],
+    ["Fiqh dan Fatwa", 2.0],
+    ["Muamalat", 2.0],
+    ["Undang-Undang", 3.0]
+  ];
+  $("#eligibilityList").innerHTML = programmes.map(([name, min]) => `<article class="${gpa >= min ? "eligible" : ""}"><strong>${gpa >= min ? "Eligible" : "Target"}: ${name}</strong><span>Minimum guide: ${min.toFixed(2)} GPA</span></article>`).join("");
+}
+
+function renderFaq() {
+  const query = ($("#faqSearch")?.value || "").toLowerCase();
+  const matches = faqItems.filter(([q, a]) => `${q} ${a}`.toLowerCase().includes(query));
+  $("#faqList").innerHTML = matches.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join("");
+}
+
 function renderAll() {
   renderI18n();
   const events = activeEvents();
@@ -607,6 +752,7 @@ function renderAll() {
   renderClassSchedule();
   renderOfficialDocument();
   renderPlanner();
+  renderCompanion();
 }
 
 function openEvent(id) {
@@ -745,6 +891,45 @@ function wire() {
   $("#askAssistantBtn").addEventListener("click", answerAssistant);
   $("#assistantQuestion").addEventListener("keydown", (event) => {
     if (event.key === "Enter") answerAssistant();
+  });
+  $("#calcGpaBtn").addEventListener("click", () => renderEligibility(Number($("#gpaInput").value || 0)));
+  $("#faqSearch").addEventListener("input", renderFaq);
+  $("#addAttendanceBtn").addEventListener("click", () => {
+    const subject = prompt("Subject name?");
+    if (!subject) return;
+    state.attendance.push({ id: `att-${Date.now()}`, subject, attended: 0, total: 0 });
+    saveCompanionState();
+    renderCompanion();
+  });
+  document.addEventListener("change", (event) => {
+    if (event.target.matches("[data-check]")) {
+      state.checklist[event.target.dataset.check] = event.target.checked;
+      saveCompanionState();
+      renderCompanion();
+    }
+    if (event.target.matches(".prayer-input")) renderCompanion();
+    if (["budgetAllowance", "budgetFood", "budgetTransport", "budgetBooks"].includes(event.target.id)) {
+      state.budget = {
+        allowance: Number($("#budgetAllowance").value || 0),
+        food: Number($("#budgetFood").value || 0),
+        transport: Number($("#budgetTransport").value || 0),
+        books: Number($("#budgetBooks").value || 0)
+      };
+      saveCompanionState();
+      renderCompanion();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    const attendId = event.target.dataset.attend;
+    const missId = event.target.dataset.miss;
+    if (attendId || missId) {
+      const item = state.attendance.find((entry) => entry.id === (attendId || missId));
+      if (!item) return;
+      item.total += 1;
+      if (attendId) item.attended += 1;
+      saveCompanionState();
+      renderCompanion();
+    }
   });
 
   $("#prevMonth").addEventListener("click", () => {

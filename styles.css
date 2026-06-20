@@ -193,6 +193,141 @@ input { accent-color: var(--usim-green); }
 .agenda-item strong { display: block; }
 .agenda-item span { color: var(--muted); font-size: .82rem; }
 
+.companion-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.companion-hero {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr);
+  gap: 1rem;
+  align-items: center;
+}
+.daily-stack,
+.planner-metrics,
+.resource-grid,
+.campus-grid,
+.prayer-grid,
+.budget-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem;
+}
+.daily-stack article,
+.resource-grid article,
+.campus-grid article,
+.eligibility-list article,
+.attendance-item,
+.parent-box,
+.check-item-row {
+  padding: .7rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--soft);
+}
+.daily-stack span,
+.daily-stack strong,
+.resource-grid span,
+.resource-grid small,
+.campus-grid span,
+.parent-box span {
+  display: block;
+}
+.daily-stack span,
+.resource-grid small,
+.campus-grid span,
+.parent-box span {
+  color: var(--muted);
+  font-size: .78rem;
+}
+.daily-stack strong {
+  color: var(--usim-green);
+}
+.checklist,
+.guide-list,
+.attendance-list,
+.eligibility-list,
+.faq-list {
+  display: grid;
+  gap: .55rem;
+}
+.check-item-row {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-weight: 800;
+}
+.guide-list details,
+.faq-list details {
+  padding: .75rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--soft);
+}
+.guide-list summary,
+.faq-list summary {
+  cursor: pointer;
+  font-weight: 900;
+}
+.guide-list p,
+.faq-list p {
+  margin: .55rem 0 0;
+  color: var(--muted);
+}
+.attendance-item {
+  display: grid;
+  gap: .45rem;
+  border-left: 5px solid var(--usim-green);
+}
+.attendance-item.danger {
+  border-left-color: var(--exam);
+}
+.attendance-item span,
+.eligibility-list span {
+  color: var(--muted);
+  font-size: .8rem;
+}
+.eligibility-list article {
+  border-left: 5px solid #8a8f98;
+}
+.eligibility-list article.eligible {
+  border-left-color: var(--usim-green);
+}
+.gpa-tool {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .7rem;
+  align-items: end;
+}
+.budget-balance {
+  display: block;
+  color: var(--usim-green);
+  font-size: 1.3rem;
+}
+.roadmap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-bottom: .8rem;
+}
+.roadmap span {
+  padding: .55rem .7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--soft);
+  font-weight: 850;
+}
+.roadmap .current {
+  background: var(--usim-green);
+  color: #fff;
+}
+.parent-box {
+  display: grid;
+  gap: .3rem;
+}
+
 .planner-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -514,6 +649,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
   .topbar { position: static; align-items: flex-start; flex-direction: column; }
   .top-actions { width: 100%; justify-content: space-between; }
   .sidebar, .dashboard { grid-template-columns: 1fr; }
+  .companion-grid, .companion-hero, .daily-stack, .resource-grid, .campus-grid, .prayer-grid, .budget-grid, .gpa-tool { grid-template-columns: 1fr; }
   .planner-grid, .profile-form, .task-form, .assistant-box, .planner-metrics { grid-template-columns: 1fr; }
   .class-profile { grid-template-columns: 1fr; }
   .reminder-tools, .today-list { grid-template-columns: 1fr; }
